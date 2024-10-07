@@ -1,4 +1,5 @@
 import {NextFunction, Request, Response} from 'express';
+import userRoutes from './routes/user';
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -35,3 +36,6 @@ backendApp.get('/', (request: Request, response: Response) => {
     //Handle request and provide response
     response.json({exam: "example response"});
 });
+
+// User Routes (Routing to different pages)
+backendApp.use('/api', userRoutes); // This is a sample route
