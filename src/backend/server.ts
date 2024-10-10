@@ -1,41 +1,34 @@
 import {NextFunction, Request, Response} from 'express';
 import userRoutes from './routes/user';
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import path from 'path';
 
-const express = require("express");
-const mongoose = require("mongoose");
-require("dotenv").config();
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+app.use(cors());
+app.use(express.json());
 
 //Start Express App
-const backendApp = express();
-
-//Connect to MongooseDB
-//TODO: Figure out how to host a local MongoDB or decide to use Atlas MongoDB
-mongoose.connect()
-    .then(() => {
-
-        //Sets the Express app to listen to a specific port
-        const PORT = process.env.PORT;
-        backendApp.listen(PORT, () => {
-            console.log(`Express App running on ${PORT}`);
-        })
-
-    })
-    .catch((error) => {
-        console.log(`Error connecting mongoose: ${error}`);
-    });
-
-//Pre-handle of every request
-backendApp.use(express.json());
-backendApp.use((request: Request, response: Response, next: NextFunction) => {
-    console.log(`${request.method} from ${request.path}`);
-    next();
+app.get("/", (req: Request, res: Response) => {
+    res.send("Hello World");
+    console.log("base page");
 });
 
-//Handle get requests and provide responses
-backendApp.get('/', (request: Request, response: Response) => {
-    //Handle request and provide response
-    response.json({exam: "example response"});
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
 
 // User Routes (Routing to different pages)
-backendApp.use('/api', userRoutes); // This is a sample route
+app.use('/api', userRoutes); // This is a sample route
+app.use(express.static(path.join(__dirname, '../../client/build')));
+app.get('/api/hello', (req: Request, res: Response) => {
+    console.log("HELLO");
+    res.json({ message: 'Hello from the backend!' });
+  });
+app.get('*', (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
+  });
