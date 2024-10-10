@@ -18,9 +18,6 @@ app.get("/", (req: Request, res: Response) => {
     console.log("base page");
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
 
 // User Routes (Routing to different pages)
 app.use('/api', userRoutes); // This is a sample route
@@ -32,3 +29,7 @@ app.get('/api/hello', (req: Request, res: Response) => {
 app.get('*', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
   });
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
