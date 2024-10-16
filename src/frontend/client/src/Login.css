@@ -1,19 +1,25 @@
 .Login{
     text-align: center;
+    background-color: slategrey;
+    width: 100%;
+    height: 100%;
 
 }
 
 .Login-header{
     background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    display: block;
     align-items: center;
     justify-content: center;
     font-size: calc(10px + 2vmin);
+    margin: 10px;
     color: white;
 }
 
 .Login-head-text{
+
+}
+
+.login-form{
 
 }
