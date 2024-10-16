@@ -3,13 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-
   "scripts": {
     "client": "npm start --prefix ../frontend/client",
     "server": "ts-node server.ts",
     "dev": "concurrently \"npm run server\" \"npm run client\""
-  }
-,
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -21,6 +19,7 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
     "@types/node": "^22.7.4",
     "concurrently": "^9.0.1"
   }

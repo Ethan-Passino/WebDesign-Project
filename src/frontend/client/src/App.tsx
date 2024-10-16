@@ -6,10 +6,12 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+          <a className="App-link" href="/Login">click here to move to a fake login page</a>
         <img src={logo} className="App-logo" alt="logo" />
+        <text>hehe react go spin</text>
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
+           <code> this may or may not be some placeholder text
+           </code> </p>
         <a
           className="App-link"
           href="https://reactjs.org"
