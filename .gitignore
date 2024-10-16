@@ -7,6 +7,8 @@ node_modules
 /.pnp
 .pnp.js
 
+*.js
+*.jsx
 
 # production
 /build
@@ -23,5 +25,3 @@ yarn-debug.log*
 yarn-error.log*
 
 node_modules
-
-WebDesign-Project.code-workspace
