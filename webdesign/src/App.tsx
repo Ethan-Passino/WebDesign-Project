@@ -1,35 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Login from './Login/Login';
+import Signup from './Signup/Signup';
+import Dashboard from './Dashboard/Dashboard';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
+    <Router>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <nav className="top-bar">
+          <Link to="/" className="nav-link">Home</Link>
+          <Link to="/login" className="nav-link">Login</Link>
+          <Link to="/signup" className="nav-link">Sign Up</Link>
+          <Link to="/dashboard" className="nav-link">Dashboard</Link>
+        </nav>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard" element={ <Dashboard /> }></Route>
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+function Home() {
+  return (
+    <div className="home-content">
+      <h1>TaskFlow</h1>
+      <p>TaskFlow makes project management simple and engaging. Easily create, assign, and track tasks, all in one place. With checklists, time frames, and comments, staying organized has never been easier.</p>
+      <p>Boost your productivity with our fun gamification features: earn points, unlock achievements, and climb the leaderboards as you complete tasks. Task management, reimagined!</p>
+            {/* Signup and Login buttons */}
+      <div className="button-container">
+        <Link to="/signup">
+          <button className="home-button signup-button">Sign Up</button>
+        </Link>
+        <Link to="/login">
+          <button className="home-button login-button">Login</button>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+export default App;

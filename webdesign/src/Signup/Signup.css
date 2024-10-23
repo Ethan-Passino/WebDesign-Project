@@ -1,0 +1,100 @@
+/* General styling for signup page */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* Centering the signup page */
+  .signup-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+  }
+  
+  /* Styling the signup container */
+  .signup-container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    text-align: center;
+  }
+  
+  /* Title styling */
+  h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Form label styling */
+  label {
+    display: block;
+    text-align: left;
+    margin: 10px 0 5px 0;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  /* Input field styling */
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    color: #333; /* Text color is now dark for visibility */
+    transition: border-color 0.3s ease;
+  }
+  
+  input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  /* Button styling */
+  button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Message styling (error or success) */
+  .message {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #d9534f; /* Red for error */
+  }
+  
+  .message.success {
+    color: #5cb85c; /* Green for success */
+  }
+  
+  /* Responsive styling */
+  @media (max-width: 400px) {
+    .signup-container {
+      width: 90%;
+      padding: 20px;
+    }
+  }
+  
