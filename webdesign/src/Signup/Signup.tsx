@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Signup.css';
 
 function Signup() {
@@ -6,27 +7,23 @@ function Signup() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false); // New state to track success or error
+  const navigate = useNavigate();
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!username || !password || !confirmPassword) {
-      setMessage('Please fill in all fields.');
-      setIsSuccess(false);
-      return;
-    }
-
     if (password !== confirmPassword) {
       setMessage('Passwords do not match');
-      setIsSuccess(false);
       return;
     }
 
-    // If no errors, display success message immediately
-    setMessage('Signup successful!');
-    setIsSuccess(true); // Mark as success
+    // Simulate signup process
+    if (username && password) {
+      setMessage('Signup successful!');
+      navigate('/dashboard'); // Redirect to dashboard after signup
+    } else {
+      setMessage('Please fill in all fields.');
+    }
   };
 
   return (
@@ -64,10 +61,7 @@ function Signup() {
           <button type="submit">Sign Up</button>
         </form>
 
-        {/* Display message (error or success) */}
-        {message && (
-          <p className={`message ${isSuccess ? 'success' : ''}`}>{message}</p>
-        )}
+        {message && <p className="message">{message}</p>}
       </div>
     </div>
   );

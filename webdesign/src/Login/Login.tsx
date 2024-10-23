@@ -1,25 +1,24 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
-function Login() {
+function Login({ onLogin }: { onLogin: () => void }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false); // New state to track success or error
+  const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate the input (just an example, you can add more validation)
-    if (!username || !password) {
+    // Simulate login process (you can add validation if needed)
+    if (username && password) {
+      setMessage('Login successful!');
+      onLogin(); // Call the function to update the login state in App
+      navigate('/dashboard'); // Redirect to dashboard after login
+    } else {
       setMessage('Please fill in all fields.');
-      setIsSuccess(false);
-      return;
     }
-
-    // If no errors, display success message immediately
-    setMessage('Login successful!');
-    setIsSuccess(true); // Mark as success
   };
 
   return (
@@ -49,9 +48,7 @@ function Login() {
         </form>
 
         {/* Display message (error or success) */}
-        {message && (
-          <p className={`message ${isSuccess ? 'success' : ''}`}>{message}</p>
-        )}
+        {message && <p className="message">{message}</p>}
       </div>
     </div>
   );
