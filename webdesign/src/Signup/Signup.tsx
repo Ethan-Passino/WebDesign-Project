@@ -9,27 +9,50 @@ function Signup() {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  const validateUsername = (username: string) => {
+    const usernameRegex = /^[^\s]{3,20}$/; // No spaces, between 3 and 20 characters
+    return usernameRegex.test(username);
+  };
+
+  const validatePassword = (password: string) => {
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,30}$/; // At least 1 uppercase letter, 1 symbol, and 8-30 characters
+    return passwordRegex.test(password);
+  };
+
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      setMessage('Passwords do not match');
+    if (!validateUsername(username)) {
+      setMessage('Username must be between 3-20 characters and must not contain spaces.');
       return;
     }
 
-    // Simulate signup process
-    if (username && password) {
-      setMessage('Signup successful!');
-      navigate('/dashboard'); // Redirect to dashboard after signup
-    } else {
-      setMessage('Please fill in all fields.');
+    if (!validatePassword(password)) {
+      setMessage('Password must be between 8-30 characters, include 1 uppercase letter, and 1 symbol.');
+      return;
     }
+
+    if (password !== confirmPassword) {
+      setMessage('Passwords do not match.');
+      return;
+    }
+
+    // If validation is successful
+    setMessage('Signup successful!');
+    navigate('/dashboard');
   };
 
   return (
     <div className="signup-page">
       <div className="signup-container">
         <h2>Sign Up</h2>
+
+        {/* Text Box with Signup Requirements */}
+        <div className="requirements-box">
+          <p><strong>Username Requirements:</strong> Must be between 3-20 characters, no spaces.</p>
+          <p><strong>Password Requirements:</strong> Must be between 8-30 characters, contain at least 1 uppercase letter, and 1 symbol.</p>
+        </div>
+
         <form className="signup-form" onSubmit={handleSignup}>
           <label htmlFor="username">Username</label>
           <input
@@ -61,6 +84,7 @@ function Signup() {
           <button type="submit">Sign Up</button>
         </form>
 
+        {/* Display messages */}
         {message && <p className="message">{message}</p>}
       </div>
     </div>

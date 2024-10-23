@@ -18,7 +18,7 @@ body, html {
   background-color: #007bff;
   padding: 15px 20px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-end; /* Align all items to the right */
   align-items: center;
   width: 100%;
   position: fixed;
@@ -28,14 +28,31 @@ body, html {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Navigation link styling (Home, Login, Signup, Dashboard) */
 .nav-link {
   color: white;
   text-decoration: none;
   font-size: 1.2rem;
   margin-left: 20px;
+  cursor: pointer;
 }
 
 .nav-link:hover {
+  text-decoration: underline;
+}
+
+/* Sign out button styling */
+.signout-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  margin-left: 20px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.signout-button:hover {
   text-decoration: underline;
 }
 
