@@ -1,3 +1,6 @@
+.Dashboard-root{
+    background: #1a1a1a !important;
+}
 .Layout-grid{
     display: grid;
     grid-template: 1fr / 1fr 1fr 1fr 1fr;
@@ -6,8 +9,7 @@
     justify-content: center;
     justify-items: center;
     align-content: center;
-    background: #c9c9c9;
-    background-size: auto;
+    background: #4e4e4e;
     border: 2px solid white;
     align-items: start;
     border-radius: 4px;
@@ -16,6 +18,11 @@
 
 .Root-header{
     align-content: center;
+    text-align:center;
+}
+.Board-header{
+    align-content: center;
+    text-align:center;
 }
 
 .Task-root{
@@ -55,13 +62,11 @@
     display: block;
 }
 
-ul.Task-list{
-    list-style-type: none;
-    margin: 2px;
-    padding-left: 5px;
 
-    border-left: 3px solid red;
-    background-color: #f1f1f1;
+.completed input[type="text"]{
+    color:gray;
+    background-color: darkgray;
+    text-decoration: line-through;
 }
 textarea{
     resize: none;
