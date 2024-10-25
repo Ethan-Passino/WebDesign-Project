@@ -1,0 +1,45 @@
+.TaskList{
+    display: inline-grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+
+}
+.Task-list{
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+}
+
+.Add-Task-Button{
+    max-height: 50px;
+    max-width: 50px;
+}
+.Add-Subtask-Button{
+    background: mediumblue;
+    color: white;
+}
+li{
+    display:grid;
+    grid-template-columns: auto 1fr auto;
+    column-gap: 2px;
+    align-items: baseline;
+    margin-bottom: 10px;
+
+}
+li text{
+    grid-column: 2;
+    margin-right: 5px;
+}
+li input[type="checkbox"]{
+    grid-column: 1;
+}
+li button{
+    grid-column: 3;
+    max-height: 50px;
+    max-width: 50px;
+
+}
+
+

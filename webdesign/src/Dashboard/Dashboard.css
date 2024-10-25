@@ -1,0 +1,73 @@
+.Dashboard-root{
+    background: #1a1a1a !important;
+}
+.Layout-grid{
+    display: grid;
+    grid-template: 1fr / 1fr 1fr 1fr 1fr;
+    gap: 20px;
+    margin : 10px;
+    justify-content: center;
+    justify-items: center;
+    align-content: center;
+    background: #4e4e4e;
+    border: 2px solid white;
+    align-items: start;
+    border-radius: 4px;
+    overflow: scroll;
+}
+
+.Root-header{
+    align-content: center;
+    text-align:center;
+}
+.Board-header{
+    align-content: center;
+    text-align:center;
+}
+
+.Task-root{
+    min-width: 200px;
+    min-height: 250px;
+    grid-template-rows: 25% 1fr 1fr 20%;
+    align-items: start;
+    align-content: space-evenly;
+}
+.Task-game-root{
+    border: 2px solid #c56c6c;
+    width: 100%;
+    text-align: center;
+    border-radius: 3px;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+.Task-list-root{
+    display: block;
+    align-content: center;
+    text-align:center;
+}
+.Task-list-item{
+    display: flex;
+    border: 1px solid #6a6262;
+    border-radius: 2px;
+    text-align: left;
+    align-items: center;
+
+}
+
+.Task-text{
+    align-items: center;
+    width: 75%;
+    max-width: 75%;
+    min-width: 75%;
+    display: block;
+}
+
+
+.completed input[type="text"]{
+    color:gray;
+    background-color: darkgray;
+    text-decoration: line-through;
+}
+textarea{
+    resize: none;
+}

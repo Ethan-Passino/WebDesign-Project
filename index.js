@@ -14,3 +14,8 @@ app.get("/", (req, res) => {
     res.send("Hello World");
     console.log("base page");
 });
+
+app.get("/Login", (req, res) => {
+    res.send("Sending to login page");
+    app.us
+})
