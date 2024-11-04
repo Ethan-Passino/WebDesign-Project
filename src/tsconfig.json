@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES6",                          // Compatible target for both frontend and backend
+    "module": "commonjs",                     // Module system used by Node.js (backend)
+    "lib": ["dom", "esnext"],                 // Use DOM for frontend and ESNext features
+    "jsx": "react-jsx",                       // Support for JSX in React (frontend)
+    "strict": true,                           // Enable strict type checking
+    "moduleResolution": "node",               // Resolve modules using Node.js resolution
+    "esModuleInterop": true,                  // Enable compatibility with CommonJS
+    "skipLibCheck": true,                     // Skip type checks on declaration files
+    "forceConsistentCasingInFileNames": true, // Enforce consistent casing in imports
+    "resolveJsonModule": true,                // Allow importing JSON files
+    "isolatedModules": true,                  // Treat each file as a separate module (required for CRA)
+    "noEmit": true,                           // Prevent TypeScript from emitting compiled JavaScript
+    "baseUrl": ".",                           // Set base URL for module resolution
+    "paths": {
+      "@frontend/*": ["FrontEnd/*"],          // Alias for frontend imports
+      "@backend/*": ["BackEnd/*"]             // Alias for backend imports
+    }
+  },
+  "include": ["FrontEnd/**/*", "BackEnd/**/*"], // Include both frontend and backend files
+  "exclude": ["node_modules", "build", "dist"]  // Exclude dependencies and build outputs
+}

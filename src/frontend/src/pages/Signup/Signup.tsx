@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Login.css';
+import './Signup.css';
+import React from 'react';
 
-function Login({ onLogin }: { onLogin: () => void }) {
+function Signup() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
@@ -18,37 +20,46 @@ function Login({ onLogin }: { onLogin: () => void }) {
     return passwordRegex.test(password);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate username
     if (!validateUsername(username)) {
       setMessage('Username must be between 3-20 characters and must not contain spaces.');
       return;
     }
 
-    // Validate password
     if (!validatePassword(password)) {
       setMessage('Password must be between 8-30 characters, include 1 uppercase letter, and 1 symbol.');
       return;
     }
 
-    // If both are valid
-    setMessage('Login successful!');
-    onLogin(); // Call the function to update the login state in App
-    navigate('/dashboard'); // Redirect to dashboard after login
+    if (password !== confirmPassword) {
+      setMessage('Passwords do not match.');
+      return;
+    }
+
+    // If validation is successful
+    setMessage('Signup successful!');
+    navigate('/dashboard');
   };
 
   return (
-    <div className="login-page">
-      <div className="login-container">
-        <h2>Login</h2>
-        <form className="login-form" onSubmit={handleLogin}>
+    <div className="signup-page">
+      <div className="signup-container">
+        <h2>Sign Up</h2>
+
+        {/* Text Box with Signup Requirements */}
+        <div className="requirements-box">
+          <p><strong>Username Requirements:</strong> Must be between 3-20 characters, no spaces.</p>
+          <p><strong>Password Requirements:</strong> Must be between 8-30 characters, contain at least 1 uppercase letter, and 1 symbol.</p>
+        </div>
+
+        <form className="signup-form" onSubmit={handleSignup}>
           <label htmlFor="username">Username</label>
           <input
             type="text"
             id="username"
-            placeholder="Enter your Username"
+            placeholder="Enter your username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
@@ -57,19 +68,28 @@ function Login({ onLogin }: { onLogin: () => void }) {
           <input
             type="password"
             id="password"
-            placeholder="Enter your Password"
+            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button type="submit">Login</button>
+          <label htmlFor="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirm your password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+
+          <button type="submit">Sign Up</button>
         </form>
 
-        {/* Display message (error or success) */}
+        {/* Display messages */}
         {message && <p className="message">{message}</p>}
       </div>
     </div>
   );
 }
 
-export default Login;
+export default Signup;
