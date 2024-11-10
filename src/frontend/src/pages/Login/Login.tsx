@@ -10,34 +10,49 @@ function Login({ onLogin }: { onLogin: () => void }) {
   const navigate = useNavigate();
 
   const validateUsername = (username: string) => {
-    const usernameRegex = /^[^\s]{3,20}$/; // No spaces, between 3 and 20 characters
+    const usernameRegex = /^[^\s]{3,20}$/;
     return usernameRegex.test(username);
   };
 
   const validatePassword = (password: string) => {
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,30}$/; // At least 1 uppercase letter, 1 symbol, and 8-30 characters
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,30}$/;
     return passwordRegex.test(password);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate username
     if (!validateUsername(username)) {
       setMessage('Username must be between 3-20 characters and must not contain spaces.');
       return;
     }
 
-    // Validate password
     if (!validatePassword(password)) {
       setMessage('Password must be between 8-30 characters, include 1 uppercase letter, and 1 symbol.');
       return;
     }
 
-    // If both are valid
-    setMessage('Login successful!');
-    onLogin(); // Call the function to update the login state in App
-    navigate('/dashboard'); // Redirect to dashboard after login
+    try {
+      const response = await fetch('/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
+        setMessage('Login successful!');
+        onLogin(); // Update login state in the parent component
+        navigate('/dashboard');
+      } else {
+        const data = await response.json();
+        setMessage(data.error);
+      }
+    } catch (error) {
+      setMessage('An error occurred during login.');
+      console.error('Login error:', error);
+    }
   };
 
   return (
@@ -66,7 +81,6 @@ function Login({ onLogin }: { onLogin: () => void }) {
           <button type="submit">Login</button>
         </form>
 
-        {/* Display message (error or success) */}
         {message && <p className="message">{message}</p>}
       </div>
     </div>
