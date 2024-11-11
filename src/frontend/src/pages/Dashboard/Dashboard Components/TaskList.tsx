@@ -9,7 +9,7 @@ interface TaskItem{
     subtasks?: TaskItem[];
 }
 
-
+//TODO: add stuff to backend and convert this to use it
 
 export function TaskList() {
     const [tasks, setTasks]  = useState<TaskItem[]>([]);
@@ -69,13 +69,14 @@ export function TaskList() {
 
     const renderTasks = (taskList: TaskItem[]) =>{
         return(
-            <ul className="Task-list">
+            <ul className={"Added-Task-List"}>
                 {taskList.map(task => (
-                    <div className={"Task-List-item"}>
+                    <div className={"Added-Task--item"}>
                         <li key={task.id} className={task.completed ? "completed" : ''}>
-                            <input type={"checkbox"} checked={task.completed}
+                            
+                            <label form="Add-Task-Checkbox"><input type={"checkbox"} checked={task.completed}
                                    onChange={() => toggleTaskCompleted(task.id)}
-                                   className={"Add-Task-Checkbox"}/>
+                                className={"Add-Task-Checkbox"} /></label>
                             <input type={"text"} value={task.text}
                                    onChange={(e) => updateTask(task.id, e.target.value)}
                                    className={"Add-Task-Text"}/>
@@ -91,13 +92,15 @@ export function TaskList() {
 
 
     return (
-        <div className="TaskList">
-            <input type={"text"}
-                   value={newTaskText}
-                   onChange={(e)=> setNewTaskText(e.target.value)}
-                   placeholder={"add new task"}
-                    className={"Add-Task-Text"}/>
-            <button onClick={() => addTask()} className={"Add-Task-Button"}>+</button>
+        <div className="TaskListRoot">
+            <div className={"NewTask"}>
+                <input type={"text"}
+                      value={newTaskText}
+                      onChange={(e) => setNewTaskText(e.target.value)}
+                      placeholder={"add new task"}
+                      className={"Add-Task-Text"}/>
+                <button onClick={() => addTask()} className={"Add-Task-Button"}>+</button>
+            </div>
             {renderTasks(tasks)}
         </div>
     );

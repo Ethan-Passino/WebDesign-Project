@@ -1,24 +1,46 @@
-.TaskList{
-    display: inline-grid;
-    grid-template-columns: 1fr auto;
-    align-items: baseline;
+.TaskListRoot{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
 
 }
-.Task-list{
-    list-style: none;
-    padding: 0;
-    display: grid;
-    grid-template-columns: 1fr auto;
+.NewTask{
+    display: flex;
+    flex-direction: row;
     align-items: baseline;
+
+
+
 }
 
+.Add-Task-Text{
+    flex: 1;
+}
 .Add-Task-Button{
-    max-height: 50px;
-    max-width: 50px;
+    display: flex;
+    max-height: 40px;
+    max-width:  40px;
+    padding: 8px;
+    font-size: 16px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 .Add-Subtask-Button{
     background: mediumblue;
     color: white;
+}
+button {
+    display: flex;
+    max-height: 40px;
+    max-width:  40px;
+    padding: 8px;
+    font-size: 16px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 li{
     display:grid;
@@ -28,17 +50,17 @@ li{
     margin-bottom: 10px;
 
 }
+li input[type="checkbox"]{
+    grid-column: 1;
+}
 li text{
     grid-column: 2;
     margin-right: 5px;
 }
-li input[type="checkbox"]{
-    grid-column: 1;
-}
 li button{
     grid-column: 3;
-    max-height: 50px;
-    max-width: 50px;
+    max-height: 30px;
+    max-width:  30px;
 
 }
 
