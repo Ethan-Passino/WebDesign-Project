@@ -32,16 +32,6 @@
     background: mediumblue;
     color: white;
 }
-button {
-    display: flex;
-    max-height: 40px;
-    max-width:  40px;
-    padding: 8px;
-    font-size: 16px;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-}
 li{
     display:grid;
     grid-template-columns: auto 1fr auto;
