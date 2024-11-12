@@ -2,7 +2,10 @@ import "./Dashboard.css";
 
 import {TaskList} from './Dashboard Components/TaskList'
 
-//TODO: Gamification bar
+//TODO:
+// -Gamification bar
+// -Migrate to MVC format
+// -Implement drag and drop library
 
 export function Dashboard() {
     return (

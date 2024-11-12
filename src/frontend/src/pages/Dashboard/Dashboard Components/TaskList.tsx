@@ -9,7 +9,11 @@ interface TaskItem{
     subtasks?: TaskItem[];
 }
 
-//TODO: add stuff to backend and convert this to use it
+//TODO:
+// -add stuff to backend and convert this to use it
+// -fix subtasks
+// -gamification bar
+// -refactor w taskItem component
 
 export function TaskList() {
     const [tasks, setTasks]  = useState<TaskItem[]>([]);
