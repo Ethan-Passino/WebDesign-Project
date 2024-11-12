@@ -14,7 +14,7 @@ function App() {
 
   return (
     <Router>
-      <div>src/frontend/src/App.tsx
+      <div>
         {/* Navigation bar that stays visible, but conditionally renders certain buttons */}
         <nav className="top-bar">
           <Link to="/" className="nav-link">Home</Link>
