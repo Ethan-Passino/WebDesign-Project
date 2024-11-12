@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './db/database';
 import authRoutes from './routes/authRoutes';
+import dashBoardRoutes from './routes/dashboardRoutes';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,6 +16,7 @@ connectDB();
 app.use(express.json());
 
 app.use('/auth', authRoutes);
+app.use('/dashboards', dashBoardRoutes);
 
 app.use(express.static(path.join(__dirname, '../../src/frontend/build')));
 

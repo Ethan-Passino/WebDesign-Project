@@ -4,6 +4,7 @@ import Signup from './Signup/Signup';
 import Dashboard from './Dashboard/Dashboard';
 import { useState } from 'react';
 import './App.css';
+import DashboardSelection from './DashboardSelection/DashboardSelection';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Manage login state
@@ -30,7 +31,7 @@ function App() {
           {/* Conditionally show Dashboard and Sign Out buttons if the user is logged in */}
           {isLoggedIn && (
   <>
-    <Link to="/dashboard" className="nav-link">Dashboard</Link>
+    <Link to="/dashboardselector" className="nav-link">Dashboards</Link>
     <Link 
       to="/"  /* Redirect to home after logging out */
       className="nav-link signout-button" 
@@ -49,6 +50,10 @@ function App() {
           <Route
             path="/dashboard"
             element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/dashboardselector"
+            element={isLoggedIn ? <DashboardSelection /> : <Navigate to="/login" /> }
           />
         </Routes>
       </div>

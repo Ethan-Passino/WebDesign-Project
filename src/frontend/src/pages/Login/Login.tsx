@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
-import React from 'react';
 
-function Login({ onLogin }: { onLogin: () => void }) {
+interface LoginProps {
+  onLogin: () => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -42,12 +45,15 @@ function Login({ onLogin }: { onLogin: () => void }) {
       });
 
       if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('userId', data.userId); // Store userId after successful login
+        localStorage.setItem('authToken', data.token); // Store token in localStorage
         setMessage('Login successful!');
         onLogin(); // Update login state in the parent component
-        navigate('/dashboard');
+        navigate('/dashboardselector'); // Redirect to the dashboard selection page
       } else {
         const data = await response.json();
-        setMessage(data.error);
+        setMessage(data.error || 'Failed to login. Please try again.');
       }
     } catch (error) {
       setMessage('An error occurred during login.');
@@ -85,6 +91,6 @@ function Login({ onLogin }: { onLogin: () => void }) {
       </div>
     </div>
   );
-}
+};
 
 export default Login;
