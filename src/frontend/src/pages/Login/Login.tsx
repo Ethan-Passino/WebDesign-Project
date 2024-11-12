@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext'; // Import useAuth from AuthContext
 import './Login.css';
 
-interface LoginProps {
-  onLogin: () => void;
-}
-
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
+const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth(); // Get the login function from AuthContext
 
   const validateUsername = (username: string) => {
     const usernameRegex = /^[^\s]{3,20}$/;
@@ -46,10 +44,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('userId', data.userId); // Store userId after successful login
-        localStorage.setItem('authToken', data.token); // Store token in localStorage
+        login(data.token, data.userId); // Call login from AuthContext
         setMessage('Login successful!');
-        onLogin(); // Update login state in the parent component
         navigate('/dashboardselector'); // Redirect to the dashboard selection page
       } else {
         const data = await response.json();
