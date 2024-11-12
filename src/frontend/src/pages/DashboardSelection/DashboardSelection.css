@@ -26,7 +26,6 @@ h1 {
     margin-top: 20px;
 }
 
-/* Message for when no dashboards are available */
 .no-dashboards-message {
     text-align: center;
     padding: 20px;
@@ -39,14 +38,17 @@ h1 {
 
 .dashboard-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px; /* Increase the gap between the cards */
     margin-top: 10px;
+    padding: 0 20px; /* Add padding for extra spacing around the grid */
 }
 
+
 .dashboard-card {
-    height: 150px; /* Set a fixed height for uniform size */
-    padding: 15px;
+    width: 300px;   /* Adjusted card width */
+    height: 150px;  /* Adjusted card height */
+    padding: 20px;  /* Increased padding */
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -55,8 +57,7 @@ h1 {
     background-color: #f9f9f9;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-between;
     text-align: center;
 }
 
@@ -68,13 +69,16 @@ h1 {
 .dashboard-card h3 {
     margin: 0;
     color: #333;
-    font-size: 1.1em;
+    font-size: 1.2em;
 }
 
 .dashboard-card p {
     margin-top: 5px;
-    font-size: 0.9em;
+    font-size: 1em;
     color: #666;
+    overflow: hidden;          /* Hide overflow */
+    text-overflow: ellipsis;   /* Display "..." if text is too long */
+    white-space: nowrap;       /* Prevent wrapping to keep it in a single line */
 }
 
 /* Button to reveal the create form */

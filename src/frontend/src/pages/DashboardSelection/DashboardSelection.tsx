@@ -146,6 +146,7 @@ const DashboardSelector: React.FC = () => {
                             placeholder="Description (optional)"
                             value={newDashboardDescription}
                             onChange={(e) => setNewDashboardDescription(e.target.value)}
+                            maxLength={100}
                         />
                         <button type="submit">Create Dashboard</button>
                     </form>
