@@ -6,7 +6,7 @@ export interface IDashboard extends Document {
     description?: string;
     creatorId: string;
     invitedUsers?: string[];
-    tasks?: string[];
+    tasks?: Schema.Types.ObjectId[];
 }
 
 const dashboardSchema = new Schema<IDashboard>({
