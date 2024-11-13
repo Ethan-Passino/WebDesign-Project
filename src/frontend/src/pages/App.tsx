@@ -3,8 +3,8 @@ import Login from './Login/Login';
 import Signup from './Signup/Signup';
 import Dashboard from './Dashboard/Dashboard';
 import DashboardSelection from './DashboardSelection/DashboardSelection';
-import Home from './Home'
-import { AuthProvider, useAuth } from './AuthContext'; // Import AuthContext and AuthProvider
+import Home from './Home';
+import { AuthProvider, useAuth } from './AuthContext';
 import './App.css';
 
 function App() {
@@ -17,8 +17,8 @@ function App() {
 
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<RedirectIfAuthenticated component={<Login />} />} />
+            <Route path="/signup" element={<RedirectIfAuthenticated component={<Signup />} />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/dashboardselector" element={<ProtectedRoute><DashboardSelection /></ProtectedRoute>} />
           </Routes>
@@ -28,7 +28,7 @@ function App() {
   );
 }
 
-// Navigation Bar with conditional rendering based on login status
+// Navigation bar with conditional rendering based on login status
 function NavBar() {
   const { isAuthenticated, logout } = useAuth();
 
@@ -51,7 +51,13 @@ function NavBar() {
   );
 }
 
-// ProtectedRoute component to protect routes based on authentication status
+// RedirectIfAuthenticated: Redirects logged-in users to dashboard selector if they try to access login or signup
+function RedirectIfAuthenticated({ component }: { component: JSX.Element }) {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <Navigate to="/dashboardselector" /> : component;
+}
+
+// Protect specific routes to allow access only if authenticated
 function ProtectedRoute({ children }: { children: JSX.Element }) {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? children : <Navigate to="/login" />;
