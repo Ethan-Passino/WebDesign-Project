@@ -12,7 +12,10 @@ export const getAllPanels = async (req: Request, res: Response) => {
         const panels = await Panel.find({ //keep eye on this
             parentDashboard: dashboardId
         });
-        res.json(panels);
+        res.status(200).json({
+            success: true,
+            data: panels,
+        });
     } catch(error){
         console.error('issue with fetching panel: ', error);
         res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
