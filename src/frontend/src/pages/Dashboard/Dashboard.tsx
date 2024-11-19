@@ -1,6 +1,6 @@
 import "./Dashboard.css";
 
-import {TaskList} from './Dashboard Components/TaskList'
+import {Panel} from './Dashboard Components/Panel'
 
 //TODO:
 // -Gamification bar
@@ -15,7 +15,7 @@ export function Dashboard() {
                 <div className={"Task-root task1"}>
                     <h3 className={"Board-header"}>Backlog</h3>
                     <div className={"Task-list-root"}>
-                        <TaskList></TaskList>
+                        <Panel></Panel>
                     </div>
 
                     <div className={"Game-root"}>
@@ -25,7 +25,7 @@ export function Dashboard() {
                 <div className={"Task-root task2"}>
                     <h3 className={"Board-header"}>To-do</h3>
                     <div className={"Task-list-root"}>
-                        <TaskList></TaskList>
+                        <Panel></Panel>
                     </div>
                     <div className={"Game-root"}>
                         <h4 className={"Game-header"}>Gamification area</h4>
@@ -34,7 +34,7 @@ export function Dashboard() {
                 <div className={"Task-root task3"}>
                     <h3 className={"Board-header"}>In Progress</h3>
                     <div className={"Task-list-root"}>
-                        <TaskList></TaskList>
+                        <Panel></Panel>
                     </div>
 
                     <div className={"Game-root"}>
@@ -44,7 +44,7 @@ export function Dashboard() {
                 <div className={"Task-root 4"}>
                     <h3 className={"Board-header"}>Backlog</h3>
                     <div className={"Task-list-root"}>
-                        <TaskList></TaskList>
+                        <Panel></Panel>
                     </div>
 
                     <div className={"Game-root"}>

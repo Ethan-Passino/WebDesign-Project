@@ -11,7 +11,7 @@ function Signup() {
   const navigate = useNavigate();
 
   const validateUsername = (username: string) => {
-    const usernameRegex = /^[^\s]{3,20}$/;
+    const usernameRegex = /^\S{3,20}$/;
     return usernameRegex.test(username);
   };
 

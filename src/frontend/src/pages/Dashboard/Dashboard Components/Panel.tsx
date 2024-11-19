@@ -1,12 +1,16 @@
 import "./TaskList.css";
 import {useState} from "react";
+import Task from "./Task";
 
+/**
+ * @type panel
+ * @prop panelId - id of panel
+ * @prop tasks - a string of taskIds
+ * */
+type panel = {
+    panelId: string;
+    tasks: string[],
 
-interface TaskItem{
-    id: number;
-    text: string; //TODO: add due dates
-    completed: boolean;
-    subtasks?: TaskItem[];
 }
 
 //TODO:
@@ -14,12 +18,14 @@ interface TaskItem{
 // -fix subtasks
 // -gamification bar
 // -refactor w taskItem component
+// - slowly add JSDoc stuff
 
-export function TaskList() {
+export function Panel() {
     const [tasks, setTasks]  = useState<TaskItem[]>([]);
     const [newTaskText, setNewTaskText] = useState<string>('');
 
-    const addTask = (parentId?: number) => {
+
+    const addTaskToPanel = (parentId: string) => {
         if (newTaskText.trim() !== '') {
             const newTask: TaskItem = {id: Date.now(), text: newTaskText, completed: false, subtasks: []};
             setTasks([...tasks, newTask]);
@@ -71,6 +77,32 @@ export function TaskList() {
         return updatedTasks;
     }
 
+    /**
+     * @param {number} id 
+     * @param {string} action -
+     * @param {TaskItem[]} [taskList]
+     * @returns {boolean} if network operation was successfully handled in the backend or not
+     *
+     *
+     * @see TaskController.ts
+     * */
+    const panelNetworkHandler = (id: number, action: string, taskList?: task[]): boolean => {
+
+
+
+
+
+
+        return false;
+    }
+
+
+
+
+
+    /**
+     * html portion
+    * */
     const renderTasks = (taskList: TaskItem[]) =>{
         return(
             <ul className={"Added-Task-List"}>
@@ -109,3 +141,6 @@ export function TaskList() {
         </div>
     );
 }
+
+
+export default Panel;

@@ -9,8 +9,6 @@ export interface ITask extends Document{
     parentPanel: Schema.Types.ObjectId;
     completed: boolean;
     dueBy: Date;
-    createdAt: Date;
-    updatedAt: Date[];
 
 
     description?: string;
@@ -19,17 +17,19 @@ export interface ITask extends Document{
 
 
 const taskSchema = new Schema<ITask>({
-    name: { type: String, required: true },
-    id: { type: String, required: true, unique: true },
-    creatorId: {type: String, required: true },
-    completed: { type: Boolean, default: false },
-    parentPanel: { type: Schema.Types.ObjectId, ref: 'Panel' },
-    dueBy: { type: Date },
-    createdAt: { type: Date, default: Date.now, required: true },
-    updatedAt: {type: [Date], default: [], required: true },
-    description: { type: String },
-    subtasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
-});
+    name: {type: String, required: true},
+    id: {type: String, required: true, unique: true},
+    creatorId: {type: String, required: true},
+    completed: {type: Boolean, default: false},
+    parentPanel: {type: Schema.Types.ObjectId, ref: 'Panel'},
+    dueBy: {type: Date},
+    description: {type: String},
+    subtasks: [{type: Schema.Types.ObjectId, ref: 'Task'}],
+    },
+    // built-in mongoose function that adds and handles
+    // created/updatedAt values for the document
+    {timestamps: true}
+);
 
 const Task = mongoose.model<ITask>('Task', taskSchema);
 export default Task;
