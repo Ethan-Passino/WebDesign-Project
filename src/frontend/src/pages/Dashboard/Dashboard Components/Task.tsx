@@ -19,7 +19,7 @@ import axios from 'axios';
  *
  */
 export type TaskProps = {
-    id: string;
+    id: number;
     taskName: string;
     text?: string;
     parentPanel: string;
@@ -49,7 +49,7 @@ function Task({ id, taskName, text = '', parentPanel = '' ,completed = false,due
 
     const updateTask = async (updates: Partial<TaskProps>) => {
         try{
-            const response =
+            
         }catch{
 
         }

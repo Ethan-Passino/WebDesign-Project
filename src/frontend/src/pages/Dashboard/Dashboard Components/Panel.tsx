@@ -1,6 +1,6 @@
 import "./TaskList.css";
 import {useState} from "react";
-import Task from "./Task";
+import Task, { TaskProps } from "./Task";
 
 /**
  * @type panel
@@ -21,17 +21,25 @@ type panel = {
 // - slowly add JSDoc stuff
 
 export function Panel() {
-    const [tasks, setTasks]  = useState<TaskItem[]>([]);
+    const [tasks, setTasks]  = useState<TaskProps[]>([]);
     const [newTaskText, setNewTaskText] = useState<string>('');
 
 
-    const addTaskToPanel = (parentId: string) => {
+    const addTaskToPanel = (parentId: number) => {
         if (newTaskText.trim() !== '') {
-            const newTask: TaskItem = {id: Date.now(), text: newTaskText, completed: false, subtasks: []};
-            setTasks([...tasks, newTask]);
+            const newTask: TaskProps = {
+                id: Date.now(),
+                text: newTaskText, // This should be defined earlier in your code
+                taskName: "New Task Name", // Replace with a relevant task name
+                completed: false,
+                subtasks: [],
+                parentPanel: "PanelName" // Replace with the appropriate parent panel value
+              };            
+              setTasks([...tasks, newTask]);
             setNewTaskText('');
 
             if (parentId) {
+                /*
                 setTasks(
                     tasks.map(task =>
                         task.id === parentId ? {
@@ -39,6 +47,7 @@ export function Panel() {
                             }
                             : task)
                 )
+                            */
             } else {
                 setTasks([...tasks, newTask]);
             }
@@ -47,7 +56,7 @@ export function Panel() {
     };
 
 
-    const updateTask = (id: number, newText: string, taskList: TaskItem[] = tasks ): TaskItem[]=> {
+    const updateTask = (id: number, newText: string, taskList: TaskProps[] = tasks ): TaskProps[]=> {
         const updatedTasks = taskList.map(task =>
             task.id === id
                 ?  {...task, text: newText}
@@ -62,7 +71,7 @@ export function Panel() {
         return updatedTasks;
     };
 
-    const toggleTaskCompleted = (id: number, taskList: TaskItem[] = tasks): TaskItem[] =>{
+    const toggleTaskCompleted = (id: number, taskList: TaskProps[] = tasks): TaskProps[] =>{
         const updatedTasks = taskList.map(task =>
             task.id === id
                 ?  {...task, completed: !task.completed}
@@ -86,7 +95,7 @@ export function Panel() {
      *
      * @see TaskController.ts
      * */
-    const panelNetworkHandler = (id: number, action: string, taskList?: task[]): boolean => {
+    const panelNetworkHandler = (id: number, action: string, taskList?: TaskProps[]): boolean => {
 
 
 
@@ -103,7 +112,7 @@ export function Panel() {
     /**
      * html portion
     * */
-    const renderTasks = (taskList: TaskItem[]) =>{
+    const renderTasks = (taskList: TaskProps[]) =>{
         return(
             <ul className={"Added-Task-List"}>
                 {taskList.map(task => (
@@ -116,7 +125,7 @@ export function Panel() {
                             <input type={"text"} value={task.text}
                                    onChange={(e) => updateTask(task.id, e.target.value)}
                                    className={"Add-Task-Text"}/>
-                            <button onClick={() => addTask(task.id)} className={"Add-Subtask-Button"}>+</button>
+                            <button onClick={() => addTaskToPanel(task.id)} className={"Add-Subtask-Button"}>+</button>
                             {task.subtasks && task.subtasks.length > 0 && renderTasks(task.subtasks)}
                         </li>
                     </div>
@@ -124,6 +133,10 @@ export function Panel() {
             </ul>
         );
     };
+
+    const addTask = () => {
+        
+    }
 
 
 
