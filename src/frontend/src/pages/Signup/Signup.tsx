@@ -11,16 +11,16 @@ function Signup() {
   const navigate = useNavigate();
 
   const validateUsername = (username: string) => {
-    const usernameRegex = /^[^\s]{3,20}$/; // No spaces, between 3 and 20 characters
+    const usernameRegex = /^\S{3,20}$/;
     return usernameRegex.test(username);
   };
 
   const validatePassword = (password: string) => {
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,30}$/; // At least 1 uppercase letter, 1 symbol, and 8-30 characters
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,30}$/;
     return passwordRegex.test(password);
   };
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateUsername(username)) {
@@ -38,9 +38,26 @@ function Signup() {
       return;
     }
 
-    // If validation is successful
-    setMessage('Signup successful!');
-    navigate('/dashboard');
+    try {
+      const response = await fetch('/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
+        setMessage('Signup successful!');
+        navigate('/login');
+      } else {
+        const data = await response.json();
+        setMessage(data.error);
+      }
+    } catch (error) {
+      setMessage('An error occurred during signup.');
+      console.error('Signup error:', error);
+    }
   };
 
   return (
@@ -48,7 +65,6 @@ function Signup() {
       <div className="signup-container">
         <h2>Sign Up</h2>
 
-        {/* Text Box with Signup Requirements */}
         <div className="requirements-box">
           <p><strong>Username Requirements:</strong> Must be between 3-20 characters, no spaces.</p>
           <p><strong>Password Requirements:</strong> Must be between 8-30 characters, contain at least 1 uppercase letter, and 1 symbol.</p>
@@ -85,7 +101,6 @@ function Signup() {
           <button type="submit">Sign Up</button>
         </form>
 
-        {/* Display messages */}
         {message && <p className="message">{message}</p>}
       </div>
     </div>

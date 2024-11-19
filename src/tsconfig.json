@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES6",                          // Compatible target for both frontend and backend
-    "module": "commonjs",                     // Module system used by Node.js (backend)
+    "module": "ESNext",                     // Module system used by Node.js (backend)
     "lib": ["dom", "esnext"],                 // Use DOM for frontend and ESNext features
     "jsx": "react-jsx",                       // Support for JSX in React (frontend)
     "strict": true,                           // Enable strict type checking

@@ -38,7 +38,7 @@
     text-align: center;
     border-radius: 3px;
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    /*grid-template-rows: 1fr 1fr;*/
 }
 .Task-list-root{
     display: block;
@@ -54,13 +54,13 @@
 
 }
 
-.Task-text{
-    align-items: center;
-    width: 75%;
-    max-width: 75%;
-    min-width: 75%;
-    display: block;
-}
+/*.Task-text{*/
+/*    align-items: center;*/
+/*    width: 75%;*/
+/*    max-width: 75%;*/
+/*    min-width: 75%;*/
+/*    display: block;*/
+/*}*/
 
 
 .completed input[type="text"]{
