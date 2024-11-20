@@ -1,9 +1,11 @@
 import {Request, Response} from 'express';
 import Panel from '../models/Panel';
 
-/**
- * initially designing this to get all panels
+/** @desc initially designing this to get all panels
  * (may or may not need to redo this to get single panels)
+ *
+ * @param req - dashboardID
+ * @param res
 */
 export const getAllPanels = async (req: Request, res: Response) => {
     try {
@@ -24,8 +26,19 @@ export const getAllPanels = async (req: Request, res: Response) => {
 
 export const createPanel = async (req: Request, res: Response) => {
     try {
-        const newPanel = await Panel.create(req.body);
+        const {newName = '', dashId, creatorId} = req.body;
 
+        if(!dashId || !creatorId){
+            return res.status(400).json({ error: 'Malformed createPanel request'});
+        }
+
+        const newPanel = new Panel({
+            name: newName,
+            parentDash: dashId,
+            creatorId: creatorId,
+        })
+        const savedPanel = await newPanel.save();
+        res.status(200).json(savedPanel);
     } catch(error){
         console.error('issue with creating panel: ', error);
         res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
@@ -40,4 +53,12 @@ export const getPanelById = async (req: Request, res: Response) => {
     }catch(error){
         res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
     }
-}
+};
+
+export const updatePanel = async (req: Request, res: Response) => {
+
+};
+
+export const deletePanel = async (req: Request, res: Response) => {
+
+};

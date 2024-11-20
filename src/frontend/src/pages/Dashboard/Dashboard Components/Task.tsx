@@ -1,12 +1,11 @@
 import'./TaskList.css';
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
 
 
 //TODO:
 // -add stuff to backend and convert this to use it
 // -fix subtasks
-
+const SERVER_URL = process.env.SERVER_URL || 'http://localhost:5000';
 /**
  * @type TaskProps
  * @param {string} taskName
@@ -43,7 +42,6 @@ function Task({ id, taskName, text = '', parentPanel = '' ,completed = false,due
     })
 
     useEffect(() => {
-        axios.get(``);
     })
 
 
