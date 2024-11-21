@@ -24,6 +24,7 @@ jobs:
       # Set working directory to the folder containing package.json and package-lock.json
       - name: Use backend directory
         working-directory: src/backend
+        run: echo "Switched to src/backend"
 
       # Set up Node.js
       - name: Set up Node.js
