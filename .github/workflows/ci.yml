@@ -20,7 +20,7 @@ jobs:
       # Check out the repository
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       # Set working directory to the folder containing package.json and package-lock.json
       - name: Use backend directory
         working-directory: src/backend
@@ -36,6 +36,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-       # Run tests and generate test results
-      - name: Run tests with Vitest
-        run: npm test -- --reporter=verbose --outputFile=tests-report.json
+      # Run tests
+      - name: Run tests
+        run: npm test
