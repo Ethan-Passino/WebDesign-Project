@@ -1,43 +1,40 @@
-name: CI - Run Tests
+name: CI - Backend Tests
 
 on:
   push:
     branches:
-      - main
-      - dev
       - update2
   pull_request:
     branches:
-      - main
-      - dev
       - update2
 
 jobs:
-  test:
+  backend:
     runs-on: ubuntu-latest
 
     steps:
       # Check out the repository
       - name: Checkout code
         uses: actions/checkout@v3
-        
-      # Set working directory to src/backend where package-lock.json exists
-      - name: Set working directory
-        run: cd src/backend
 
-      # Set up Node.js
+      # Set up Node.js and configure caching for the backend
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
+          cache-dependency-path: src/backend/package-lock.json
 
-      # Install dependencies
-      - name: Install dependencies
+      # Debug: List files and directories to verify structure
+      - name: List directory structure
+        run: ls -R
+
+      # Install dependencies in the backend directory
+      - name: Install backend dependencies
         working-directory: src/backend
         run: npm ci
 
-      # Run tests
-      - name: Run tests
+      # Run backend tests
+      - name: Run backend tests
         working-directory: src/backend
         run: npm test
