@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { signup, login, verifyToken, updateUser, deleteUser } from '../../controllers/authController';
+import { signup, login, verifyToken, updateUser, deleteUser, getUserProfile } from '../../controllers/authController';
 import User from '../../models/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -226,6 +226,40 @@ describe('authController', () => {
             vi.mocked(User.findByIdAndDelete).mockResolvedValueOnce(null);
 
             await deleteUser(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
+        });
+    });
+
+    describe('getUserProfile', () => {
+        it('should return the current username of a user', async () => {
+            const req = { params: { id: 'userId123' } } as Request;
+            const res = {
+                status: vi.fn().mockReturnThis(),
+                json: vi.fn(),
+            } as unknown as Response;
+
+            const mockUser = { username: 'Ethan' };
+            vi.mocked(User.findById).mockResolvedValueOnce(mockUser);
+
+            await getUserProfile(req, res);
+
+            expect(User.findById).toHaveBeenCalledWith('userId123');
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({ username: 'Ethan' });
+        });
+
+        it('should return 404 if the user is not found', async () => {
+            const req = { params: { id: 'nonExistentId' } } as Request;
+            const res = {
+                status: vi.fn().mockReturnThis(),
+                json: vi.fn(),
+            } as unknown as Response;
+
+            vi.mocked(User.findById).mockResolvedValueOnce(null);
+
+            await getUserProfile(req, res);
 
             expect(res.status).toHaveBeenCalledWith(404);
             expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });

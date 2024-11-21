@@ -120,3 +120,23 @@ export const deleteUser = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Error deleting user' });
     }
 };
+
+/**
+ * @route   GET /auth/profile/:id
+ * @desc    Retrieve a user's profile (username)
+ * @access  Private
+ */
+export const getUserProfile = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.status(200).json({ username: user.username });
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching user profile' });
+    }
+};

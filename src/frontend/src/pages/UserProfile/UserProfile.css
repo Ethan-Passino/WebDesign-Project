@@ -1,0 +1,110 @@
+/* Container for the whole user profile page */
+.user-profile-container {
+    max-width: 600px;
+    margin: 30px auto;
+    text-align: center;
+    padding-top: 80px; /* Add some space for the navbar */
+    position: relative;
+}
+
+.message-box {
+    padding: 10px;
+    margin: 20px 0; /* Add space below the box */
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    z-index: 10; /* Ensure the message box is above other content */
+}
+
+.message-box.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message-box.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.button-container {
+    margin-top: 20px;
+}
+
+.action-button, .cancel-button {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.action-button {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.action-button:hover {
+    background-color: #0056b3;
+}
+
+.cancel-button {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.cancel-button:hover {
+    background-color: #a71d2a;
+}
+
+.popup {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f9f9f9;
+    text-align: left;
+}
+
+.popup h3 {
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-group input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.popup p {
+    color: #000;
+}
+
+.current-username {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #000;
+}
