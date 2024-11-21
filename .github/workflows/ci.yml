@@ -20,11 +20,10 @@ jobs:
       # Check out the repository
       - name: Checkout code
         uses: actions/checkout@v3
-
-      # Set working directory to the folder containing package.json and package-lock.json
-      - name: Use backend directory
-        working-directory: src/backend
-        run: echo "Switched to src/backend"
+        
+      # Set working directory to src/backend where package-lock.json exists
+      - name: Set working directory
+        run: cd src/backend
 
       # Set up Node.js
       - name: Set up Node.js
@@ -35,8 +34,10 @@ jobs:
 
       # Install dependencies
       - name: Install dependencies
+        working-directory: src/backend
         run: npm ci
 
       # Run tests
       - name: Run tests
+        working-directory: src/backend
         run: npm test
