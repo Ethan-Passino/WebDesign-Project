@@ -2,34 +2,41 @@ import { Request, Response } from 'express';
 import Dashboard from '../models/Dashboard';
 import mongoose from 'mongoose';
 
-// Get all dashboards
+/**
+ * @route   GET /dashboards
+ * @desc    Fetch all dashboards associated with a specific user, 
+ *          including those created by the user or where the user is invited.
+ * @access  Private
+ */
 export const getAllDashboards = async (req: Request, res: Response) => {
     try {
-        const userId = req.query.userId as string; // Convert ObjectId to string
+        const userId = req.query.userId as string; // Extract user ID from query parameters
 
         const dashboards = await Dashboard.find({
             $or: [
-                { creatorId: userId },       // Match userId with creatorId
-                { invitedUsers: userId }     // Match userId with invitedUsers array
+                { creatorId: userId },       // Include dashboards where the user is the creator
+                { invitedUsers: userId }     // Include dashboards where the user is an invited participant
             ]
         });
         res.json(dashboards);
     } catch (error) {
         console.error('Error fetching dashboards:', error);
-        res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
+        res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error occurred" });
     }
 };
 
-
-
-// Create a new dashboard
+/**
+ * @route   POST /dashboards
+ * @desc    Create a new dashboard with the provided details, such as name, description, and creator ID.
+ * @access  Private
+ */
 export const createDashboard = async (req: Request, res: Response) => {
     try {
         const { name, description, creatorId } = req.body;
 
-        // Validation
+        // Validate required fields
         if (!name || !creatorId) {
-            return res.status(400).json({ error: 'Name and creator ID are required' });
+            return res.status(400).json({ error: 'Dashboard name and creator ID are required.' });
         }
 
         const newDashboard = new Dashboard({
@@ -39,24 +46,76 @@ export const createDashboard = async (req: Request, res: Response) => {
         });
 
         const savedDashboard = await newDashboard.save();
-        res.status(201).json(savedDashboard);
+        res.status(201).json(savedDashboard); // Respond with the created dashboard
     } catch (error) {
         console.error('Error creating dashboard:', error);
-        res.status(500).json({ error: 'Failed to create dashboard. Please try again later.' });
+        res.status(500).json({ error: 'Failed to create the dashboard. Please try again later.' });
     }
 };
 
-// Get a single dashboard by ID
+/**
+ * @route   GET /dashboards/:id
+ * @desc    Retrieve a specific dashboard by its unique ID.
+ * @access  Private
+ */
 export const getDashboardById = async (req: Request, res: Response) => {
     try {
-        const dashboard = await Dashboard.findById(req.params.id);
-        if (!dashboard) return res.status(404).json({ message: "Dashboard not found" });
-        res.status(200).json(dashboard);
+        const dashboard = await Dashboard.findById(req.params.id); // Find dashboard by ID
+        if (!dashboard) return res.status(404).json({ message: "Dashboard not found." });
+        res.status(200).json(dashboard); // Respond with the retrieved dashboard
     } catch (error) {
-        if (error instanceof Error) {
-            res.status(500).json({ error: error.message });
-        } else {
-            res.status(500).json({ error: "An unknown error occurred" });
+        console.error('Error fetching dashboard:', error);
+        res.status(500).json({ error: error instanceof Error ? error.message : "An unknown error occurred." });
+    }
+};
+
+/**
+ * @route   PATCH /dashboards/:id
+ * @desc    Update a dashboard's details, such as name, description, or invited users, by its unique ID.
+ * @access  Private
+ */
+export const updateDashboard = async (req: Request, res: Response) => {
+    try {
+        const { name, description, invitedUsers } = req.body;
+        const dashboardId = req.params.id;
+
+        // Find the dashboard by ID
+        const dashboard = await Dashboard.findById(dashboardId);
+
+        if (!dashboard) return res.status(404).json({ message: "Dashboard not found." });
+
+        // Update only provided fields
+        if (name) dashboard.name = name;
+        if (description) dashboard.description = description;
+        if (invitedUsers) dashboard.invitedUsers = invitedUsers;
+
+        const updatedDashboard = await dashboard.save(); // Save changes
+        res.status(200).json(updatedDashboard); // Respond with updated dashboard
+    } catch (error) {
+        console.error('Error updating dashboard:', error);
+        res.status(500).json({ error: 'Failed to update the dashboard. Please try again later.' });
+    }
+};
+
+/**
+ * @route   DELETE /dashboards/:id
+ * @desc    Permanently delete a dashboard by its unique ID.
+ * @access  Private
+ */
+export const deleteDashboard = async (req: Request, res: Response) => {
+    try {
+        const dashboardId = req.params.id;
+
+        // Attempt to delete the dashboard by ID
+        const deletedDashboard = await Dashboard.findByIdAndDelete(dashboardId);
+
+        if (!deletedDashboard) {
+            return res.status(404).json({ message: "Dashboard not found." });
         }
+
+        res.status(200).json({ message: "Dashboard deleted successfully." }); // Confirm deletion
+    } catch (error) {
+        console.error('Error deleting dashboard:', error);
+        res.status(500).json({ error: 'Failed to delete the dashboard. Please try again later.' });
     }
 };

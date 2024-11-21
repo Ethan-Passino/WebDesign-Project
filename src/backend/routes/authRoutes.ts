@@ -1,30 +1,41 @@
-import { Router, Request, Response } from 'express';
-import { signup, login } from '../controllers/authController';
-import jwt from 'jsonwebtoken';
+import { Router } from 'express';
+import { signup, login, verifyToken, updateUser, deleteUser } from '../controllers/authController';
 
 const router = Router();
 
-// Route to handle user signup
+/**
+ * @route   POST /auth/signup
+ * @desc    Register a new user
+ * @access  Public
+ */
 router.post('/signup', signup);
 
-// Route to handle user login
+/**
+ * @route   POST /auth/login
+ * @desc    Authenticate a user and return a JWT token
+ * @access  Public
+ */
 router.post('/login', login);
 
-// Route to verify token
-router.get('/verify-token', (req: Request, res: Response) => {
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(' ')[1];
+/**
+ * @route   GET /auth/verify-token
+ * @desc    Verify the validity of a JWT token
+ * @access  Public
+ */
+router.get('/verify-token', verifyToken);
 
-    if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
-    }
+/**
+ * @route   PUT /auth/update
+ * @desc    Update a user's username and/or password
+ * @access  Private
+ */
+router.put('/update', updateUser);
 
-    jwt.verify(token, 'your_jwt_secret', (err) => {
-        if (err) {
-            return res.status(403).json({ message: 'Invalid token' });
-        }
-        return res.status(200).json({ message: 'Token is valid' });
-    });
-});
+/**
+ * @route   DELETE /auth/delete
+ * @desc    Delete a user's account
+ * @access  Private
+ */
+router.delete('/delete', deleteUser);
 
 export default router;
