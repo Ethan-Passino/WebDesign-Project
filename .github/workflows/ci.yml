@@ -1,0 +1,37 @@
+name: CI - Run Tests
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - update2
+  pull_request:
+    branches:
+      - main
+      - dev
+      - update2
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+       # Run tests and generate test results
+      - name: Run tests with Vitest
+        run: npm test -- --reporter=verbose --outputFile=tests-report.json
