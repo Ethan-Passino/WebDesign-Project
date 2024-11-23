@@ -4,7 +4,9 @@ import {
     createDashboard, 
     getDashboardById, 
     updateDashboard, 
-    deleteDashboard 
+    deleteDashboard,
+    inviteUserToDashboard,
+    modifyDashboardDetails
 } from '../controllers/dashboardController';
 
 const router = express.Router();
@@ -25,6 +27,13 @@ router.get('/', getAllDashboards);
 router.post('/', createDashboard);
 
 /**
+ * @route   PUT /dashboards/:id
+ * @desc    Modify a dashboard's name and description
+ * @access  Private
+ */
+router.put('/:id', modifyDashboardDetails);
+
+/**
  * @route   GET /dashboards/:id
  * @desc    Retrieve a single dashboard by its ID
  * @access  Private
@@ -32,17 +41,18 @@ router.post('/', createDashboard);
 router.get('/:id', getDashboardById);
 
 /**
- * @route   PATCH /dashboards/:id
- * @desc    Update a dashboard's name, description, or invited users
- * @access  Private
- */
-router.patch('/:id', updateDashboard);
-
-/**
  * @route   DELETE /dashboards/:id
  * @desc    Delete a dashboard by its ID
  * @access  Private
  */
 router.delete('/:id', deleteDashboard);
+
+/**
+ * @route   POST /dashboards/:id/invite
+ * @desc    Invite a user to a dashboard
+ * @access  Private
+ */
+router.post('/:id/invite', inviteUserToDashboard);
+
 
 export default router;

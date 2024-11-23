@@ -5,6 +5,7 @@ import connectDB from './db/database';
 import authRoutes from './routes/authRoutes';
 import dashBoardRoutes from './routes/dashboardRoutes';
 import pointsRoutes from './routes/pointsRoutes'
+import bodyParser from 'body-parser';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,6 +16,8 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 app.use(express.json());
+app.use(bodyParser.json());
+
 
 // Routes
 app.use('/auth', authRoutes);

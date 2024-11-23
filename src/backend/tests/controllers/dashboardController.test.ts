@@ -1,13 +1,15 @@
 import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest';
-import mongoose from 'mongoose';
 import {
     getAllDashboards,
     createDashboard,
     getDashboardById,
     updateDashboard,
     deleteDashboard,
+    inviteUserToDashboard,
+    modifyDashboardDetails
 } from '../../controllers/dashboardController';
 import Dashboard from '../../models/Dashboard';
+import User from '../../models/User';
 import { Request, Response } from 'express';
 
 vi.mock('../../models/Dashboard'); // Mock the Dashboard model
@@ -287,4 +289,88 @@ describe('dashboardController', () => {
             expect(res.json).toHaveBeenCalledWith({ error: 'Failed to delete the dashboard. Please try again later.' });
         });
     });
+
+    describe('inviteUserToDashboard', () => {
+        it('should invite a user to a dashboard successfully', async () => {
+            const req = {
+                params: { id: 'dashboard123' },
+                body: { name: 'TestUser' },
+            } as unknown as Request;
+    
+            const res = {
+                json: vi.fn(),
+                status: vi.fn().mockReturnThis(),
+            } as unknown as Response;
+    
+            const mockDashboard = {
+                id: 'dashboard123',
+                creatorId: 'creator123',
+                invitedUsers: [],
+                save: vi.fn().mockResolvedValueOnce({}),
+            };
+    
+            const mockUser = { _id: 'user123', username: 'TestUser' };
+    
+            vi.spyOn(Dashboard, 'findById').mockResolvedValueOnce(mockDashboard);
+            vi.spyOn(User, 'findOne').mockResolvedValueOnce(mockUser);
+    
+            await inviteUserToDashboard(req, res);
+    
+            expect(Dashboard.findById).toHaveBeenCalledWith('dashboard123');
+            expect(User.findOne).toHaveBeenCalledWith({ username: 'TestUser' });
+            expect(mockDashboard.invitedUsers).toContain('user123');
+            expect(mockDashboard.save).toHaveBeenCalled();
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({ message: 'User TestUser invited successfully.' });
+        });
+    
+        it('should return 404 if the dashboard is not found', async () => {
+            const req = { params: { id: 'invalidDashboard' }, body: { name: 'TestUser' } } as unknown as Request;
+            const res = {
+                json: vi.fn(),
+                status: vi.fn().mockReturnThis(),
+            } as unknown as Response;
+    
+            vi.spyOn(Dashboard, 'findById').mockResolvedValueOnce(null);
+    
+            await inviteUserToDashboard(req, res);
+    
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Dashboard not found' });
+        });
+    
+        it('should return 404 if the user does not exist', async () => {
+            const req = { params: { id: 'dashboard123' }, body: { name: 'NonExistentUser' } } as unknown as Request;
+            const res = {
+                json: vi.fn(),
+                status: vi.fn().mockReturnThis(),
+            } as unknown as Response;
+    
+            const mockDashboard = { id: 'dashboard123', invitedUsers: [], save: vi.fn() };
+    
+            vi.spyOn(Dashboard, 'findById').mockResolvedValueOnce(mockDashboard);
+            vi.spyOn(User, 'findOne').mockResolvedValueOnce(null);
+    
+            await inviteUserToDashboard(req, res);
+    
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({ error: 'User does not exist' });
+        });
+    
+        it('should return 500 on error', async () => {
+            const req = { params: { id: 'dashboard123' }, body: { name: 'TestUser' } } as unknown as Request;
+            const res = {
+                json: vi.fn(),
+                status: vi.fn().mockReturnThis(),
+            } as unknown as Response;
+    
+            vi.spyOn(Dashboard, 'findById').mockRejectedValueOnce(new Error('Database error'));
+    
+            await inviteUserToDashboard(req, res);
+    
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Error inviting user to the dashboard' });
+        });
+    });
+    
 });

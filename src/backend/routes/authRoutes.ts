@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { signup, login, verifyToken, updateUser, deleteUser, getUserProfile } from '../controllers/authController';
+import { signup, login, verifyToken, updateUser, deleteUser, getUserProfile, getUserByUsername } from '../controllers/authController';
 
 const router = Router();
 
@@ -30,6 +30,7 @@ router.get('/verify-token', verifyToken);
  * @access  Private
  */
 router.get('/profile/:id', getUserProfile);
+router.get('/userbyName/:username', getUserByUsername);
 
 /**
  * @route   PUT /auth/update

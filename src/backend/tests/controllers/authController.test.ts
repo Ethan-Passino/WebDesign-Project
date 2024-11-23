@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { signup, login, verifyToken, updateUser, deleteUser, getUserProfile } from '../../controllers/authController';
+import { signup, login, verifyToken, updateUser, deleteUser, getUserProfile, getUserByUsername } from '../../controllers/authController';
 import User from '../../models/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -265,4 +265,56 @@ describe('authController', () => {
             expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
         });
     });
+
+    describe('getUserByUsername', () => {
+        it('should return a user when the username exists', async () => {
+            const req = { params: { username: 'testuser' } } as Request;
+            const res = {
+                status: vi.fn().mockReturnThis(),
+                json: vi.fn(),
+            } as unknown as Response;
+    
+            const mockUser = { _id: 'userId123', username: 'testuser' };
+            vi.mocked(User.findOne).mockResolvedValueOnce(mockUser);
+    
+            await getUserByUsername(req, res);
+    
+            expect(User.findOne).toHaveBeenCalledWith({ username: 'testuser' });
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({ user: mockUser });
+        });
+    
+        it('should return 404 when the username does not exist', async () => {
+            const req = { params: { username: 'nonexistentuser' } } as Request;
+            const res = {
+                status: vi.fn().mockReturnThis(),
+                json: vi.fn(),
+            } as unknown as Response;
+    
+            vi.mocked(User.findOne).mockResolvedValueOnce(null);
+    
+            await getUserByUsername(req, res);
+    
+            expect(User.findOne).toHaveBeenCalledWith({ username: 'nonexistentuser' });
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
+        });
+    
+        it('should return 500 when there is a database error', async () => {
+            const req = { params: { username: 'erroruser' } } as Request;
+            const res = {
+                status: vi.fn().mockReturnThis(),
+                json: vi.fn(),
+            } as unknown as Response;
+    
+            vi.mocked(User.findOne).mockRejectedValueOnce(new Error('Database error'));
+    
+            await getUserByUsername(req, res);
+    
+            expect(User.findOne).toHaveBeenCalledWith({ username: 'erroruser' });
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Error fetching user' });
+        });
+    });
+    
 });

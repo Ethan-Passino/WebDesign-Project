@@ -9,12 +9,11 @@ export interface IDashboard extends Document {
     tasks?: Schema.Types.ObjectId[];
 }
 
-const dashboardSchema = new Schema<IDashboard>({
+const dashboardSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    description: { type: String },
-    creatorId: { type: String, required: true },
-    invitedUsers: [{ type: String }],
-    tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
+    description: { type: String, default: '' },
+    creatorId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
+    invitedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // List of invited users
 });
 
 const Dashboard = mongoose.model<IDashboard>('Dashboard', dashboardSchema);

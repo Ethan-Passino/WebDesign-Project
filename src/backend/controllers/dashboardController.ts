@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Dashboard from '../models/Dashboard';
+import User from '../models/User';
 import mongoose from 'mongoose';
 
 /**
@@ -117,5 +118,70 @@ export const deleteDashboard = async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Error deleting dashboard:', error);
         res.status(500).json({ error: 'Failed to delete the dashboard. Please try again later.' });
+    }
+};
+
+/**
+ * @route   POST /dashboards/:id/invite
+ * @desc    Invite a user to a dashboard
+ * @access  Private
+ */
+export const inviteUserToDashboard = async (req: Request, res: Response) => {
+    const { id } = req.params; // Dashboard ID
+    const { name } = req.body; // User to invite
+
+    try {
+        const dashboard = await Dashboard.findById(id);
+        if (!dashboard) {
+            return res.status(404).json({ error: 'Dashboard not found' });
+        }
+        const user = await User.findOne({ username: name });
+        if (!user) {
+            return res.status(404).json({ error: 'User does not exist' });
+        }
+
+        if (dashboard.creatorId.toString() === user._id.toString()) {
+            return res.status(400).json({ error: "Cannot invite the dashboard owner." });
+        }
+
+        if (dashboard.invitedUsers?.includes(user._id.toString())) {
+            return res.status(400).json({ error: 'User is already invited.' });
+        }
+
+        dashboard.invitedUsers = dashboard.invitedUsers || [];
+        dashboard.invitedUsers.push(user._id.toString());
+
+        await dashboard.save();
+
+        res.status(200).json({ message: `User ${name} invited successfully.` });
+    } catch (error) {
+        res.status(500).json({ error: 'Error inviting user to the dashboard' });
+    }
+};
+
+/**
+ * @route   PUT /dashboards/:id
+ * @desc    Modify a dashboard's name and description
+ * @access  Private
+ */
+export const modifyDashboardDetails = async (req: Request, res: Response) => {
+    const { id } = req.params; // Dashboard ID
+    const { name, description } = req.body;
+
+    try {
+        const dashboard = await Dashboard.findById(new mongoose.Types.ObjectId(id));
+
+        if (!dashboard) {
+            return res.status(404).json({ error: 'Dashboard not found' });
+        }
+
+        dashboard.name = name || dashboard.name;
+        dashboard.description = description || dashboard.description;
+
+        await dashboard.save();
+
+        res.status(200).json({ message: 'Dashboard updated successfully', dashboard });
+    } catch (error) {
+        res.status(500).json({ error: 'Error updating dashboard details' });
     }
 };
