@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - update2
+      - main
+      - update3
   pull_request:
     branches:
       - update2
+      - main
+      - update3
 
 jobs:
   backend:
