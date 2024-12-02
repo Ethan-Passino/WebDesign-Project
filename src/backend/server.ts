@@ -4,7 +4,9 @@ import { fileURLToPath } from 'url';
 import connectDB from './db/database';
 import authRoutes from './routes/authRoutes';
 import dashBoardRoutes from './routes/dashboardRoutes';
-import pointsRoutes from './routes/pointsRoutes'
+import pointsRoutes from './routes/pointsRoutes';
+import panelRoutes from './routes/panelRoutes';
+import taskRoutes from './routes/taskRoutes';
 import bodyParser from 'body-parser';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,6 +25,8 @@ app.use(bodyParser.json());
 app.use('/auth', authRoutes);
 app.use('/dashboards', dashBoardRoutes);
 app.use('/points', pointsRoutes);
+app.use('/panels', panelRoutes);
+app.use('/tasks', taskRoutes);
 
 app.use(express.static(path.join(__dirname, '../../src/frontend/build')));
 

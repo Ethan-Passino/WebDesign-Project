@@ -59,7 +59,7 @@ const DashboardSelector: React.FC = () => {
     };
 
     const handleDashboardSelect = (dashboardId: string) => {
-        navigate(`/dashboard`);
+        navigate(`/dashboard/${dashboardId}`);
     };
 
     const handleInviteUsers = async (dashboard: Dashboard) => {

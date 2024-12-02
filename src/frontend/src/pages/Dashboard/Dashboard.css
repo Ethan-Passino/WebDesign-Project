@@ -1,73 +1,91 @@
-.Dashboard-root{
-    background: #1a1a1a !important;
-}
-.Layout-grid{
-    display: grid;
-    grid-template: 1fr / 1fr 1fr 1fr 1fr;
-    gap: 20px;
-    margin : 10px;
-    justify-content: center;
-    justify-items: center;
-    align-content: center;
-    background: #4e4e4e;
-    border: 2px solid white;
-    align-items: start;
-    border-radius: 4px;
-    overflow: scroll;
+/* Panels container */
+.panels {
+    display: flex; /* Panels are side by side */
+    align-items: flex-start; /* Align panels at the top */
+    gap: 20px; /* Space between panels */
+    overflow-x: auto; /* Enable horizontal scrolling if needed */
+    width: 100%; /* Always take up the full width of the container */
+    min-height: 200px; /* Ensure a minimum height for consistency */
+    background-color: #f9f9f9; /* Light background for better visibility */
+    padding: 10px;
+    border: 1px solid #ddd; /* Optional border for better visual separation */
+    border-radius: 8px;
+    min-width: 1000px;
 }
 
-.Root-header{
-    align-content: center;
-    text-align:center;
-}
-.Board-header{
-    align-content: center;
-    text-align:center;
-}
-
-.Task-root{
-    min-width: 200px;
-    min-height: 250px;
-    grid-template-rows: 25% 1fr 1fr 20%;
-    align-items: start;
-    align-content: space-evenly;
-}
-.Task-game-root{
-    border: 2px solid #c56c6c;
-    width: 100%;
-    text-align: center;
-    border-radius: 3px;
-    display: grid;
-    /*grid-template-rows: 1fr 1fr;*/
-}
-.Task-list-root{
-    display: block;
-    align-content: center;
-    text-align:center;
-}
-.Task-list-item{
+/* Panel card */
+.panel {
+    flex: 0 0 300px; /* Fixed width for each panel */
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
     display: flex;
-    border: 1px solid #6a6262;
-    border-radius: 2px;
-    text-align: left;
+    flex-direction: column;
     align-items: center;
-
+    max-height: calc(100vh - 100px); /* Optional: Prevent panels from becoming too tall */
+    overflow-y: auto; /* Allow scrolling for tasks within a panel */
 }
 
-/*.Task-text{*/
-/*    align-items: center;*/
-/*    width: 75%;*/
-/*    max-width: 75%;*/
-/*    min-width: 75%;*/
-/*    display: block;*/
-/*}*/
-
-
-.completed input[type="text"]{
-    color:gray;
-    background-color: darkgray;
-    text-decoration: line-through;
+/* Panels should occupy full space, even with fewer panels */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%; /* Full-width container */
+    min-height: 100vh; /* Ensure the entire height is utilized */
 }
-textarea{
-    resize: none;
+
+/* Tasks list inside a panel */
+.panel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%; /* Full width for task cards */
+}
+
+/* Task items */
+.panel ul li {
+    background-color: #f5f5f5;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    text-align: center;
+    color: #000; /* Black text for visibility */
+}
+
+/* Hover effect for tasks */
+.panel ul li:hover {
+    background-color: #e0e0e0; /* Slightly darker background on hover */
+    transform: scale(1.05); /* Slight zoom-in effect */
+}
+
+/* Add panel and task buttons */
+.add-panel-button,
+.add-task-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+}
+
+.add-panel-button:hover,
+.add-task-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.1); /* Slight zoom-in effect on hover */
+}
+
+.add-panel-button:active,
+.add-task-button:active {
+    transform: scale(1); /* Reset to normal scale when clicked */
 }

@@ -5,6 +5,7 @@ const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,30}$/;
 
 const UserProfile: React.FC = () => {
     const [currentUsername, setCurrentUsername] = useState('');
+    const [userPoints, setUserPoints] = useState<number>(0); // State for user's points
     const [showChangeUsernamePopup, setShowChangeUsernamePopup] = useState(false);
     const [showChangePasswordPopup, setShowChangePasswordPopup] = useState(false);
     const [newUsername, setNewUsername] = useState('');
@@ -16,16 +17,27 @@ const UserProfile: React.FC = () => {
     const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
 
     useEffect(() => {
-        const fetchCurrentUsername = async () => {
+        const fetchUserProfile = async () => {
             try {
-                const response = await fetch(`/auth/profile/${localStorage.getItem('userId')}`, {
+                const userId = localStorage.getItem('userId');
+                const token = localStorage.getItem('authToken');
+                
+                if (!userId || !token) {
+                    setMessage('User not authenticated.');
+                    setMessageType('error');
+                    return;
+                }
+
+                const response = await fetch(`/auth/profile/${userId}`, {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        Authorization: `Bearer ${token}`,
                     },
                 });
+
                 const data = await response.json();
                 if (response.ok) {
                     setCurrentUsername(data.username);
+                    setUserPoints(data.points || 0); // Fetch points from the backend
                 } else {
                     setMessage(data.error || 'Error fetching user data.');
                     setMessageType('error');
@@ -35,7 +47,7 @@ const UserProfile: React.FC = () => {
                 setMessageType('error');
             }
         };
-        fetchCurrentUsername();
+        fetchUserProfile();
     }, []);
 
     const resetState = (actionMessage: string, type: 'success' | 'error') => {
@@ -147,7 +159,6 @@ const UserProfile: React.FC = () => {
     return (
         <div className="user-profile-container">
             <br></br>
-            {/* Message box displayed at the top */}
             {message && (
                 <div className={`message-box ${messageType}`}>
                     <p>{message}</p>
@@ -156,9 +167,9 @@ const UserProfile: React.FC = () => {
 
             <h2>User Profile</h2>
 
-            {/* Display the current username below the header */}
             <div className="current-username">
                 <p><strong>Current Username:</strong> {currentUsername}</p>
+                <p><strong>Points:</strong> {userPoints}</p> {/* Display user's points */}
             </div>
 
             {!showChangeUsernamePopup && !showChangePasswordPopup && (

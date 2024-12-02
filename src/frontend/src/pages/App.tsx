@@ -20,7 +20,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<RedirectIfAuthenticated component={<Login />} />} />
             <Route path="/signup" element={<RedirectIfAuthenticated component={<Signup />} />} />
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            {/* Dynamic route for individual dashboards */}
+            <Route path="/dashboard/:dashboardId" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/dashboardselector" element={<ProtectedRoute><DashboardSelection /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
           </Routes>
@@ -46,7 +47,7 @@ function NavBar() {
       ) : (
         <>
           <Link to="/dashboardselector" className="nav-link">Dashboards</Link>
-          <Link to="/profile" className="nav-link">Profile</Link> {/* New Profile Link */}
+          <Link to="/profile" className="nav-link">Profile</Link>
           <Link to="/" className="nav-link signout-button" onClick={logout}>Sign Out</Link>
         </>
       )}
