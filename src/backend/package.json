@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npx tsx server.ts",
     "dev": "nodemon server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -16,16 +16,19 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.8.2",
     "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.1",
     "nodemon": "^3.1.7",
-    "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
-    "@types/jsonwebtoken": "^9.0.7"
+    "@types/jsonwebtoken": "^9.0.7",
+    "@vitest/ui": "^2.1.5",
+    "ts-node": "^10.9.2",
+    "vitest": "^2.1.5"
   }
 }

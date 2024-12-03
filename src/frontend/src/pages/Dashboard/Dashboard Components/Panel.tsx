@@ -5,7 +5,7 @@ import Task, { TaskProps } from "./Task";
 /**
  * @type panel
  * @prop panelId - id of panel
- * @prop tasks - a string of taskIds
+ * @prop tasks - a string of task objectIds
  * */
 type panel = {
     panelId: string;
@@ -23,6 +23,7 @@ type panel = {
 export function Panel() {
     const [tasks, setTasks]  = useState<TaskProps[]>([]);
     const [newTaskText, setNewTaskText] = useState<string>('');
+
 
 
     const addTaskToPanel = (parentId: number) => {
