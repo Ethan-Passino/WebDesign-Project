@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DashboardSelection.css';
-import axios from "axios";
 
 interface Dashboard {
     _id: string;
@@ -45,15 +44,11 @@ const DashboardSelector: React.FC = () => {
             return;
         }
         try {
-            const response = await axios.get('/dashboards',{
-                params: userId,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            })
-
-            if (response.status === 200) {
-                const data = await response.data.json();
+            const response = await fetch(`/dashboards?userId=${userId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (response.ok) {
+                const data = await response.json();
                 setDashboards(data);
             } else {
                 console.error('Failed to fetch dashboards:', response.status);
@@ -82,7 +77,7 @@ const DashboardSelector: React.FC = () => {
                 const fetchedUsernames: Record<string, string> = {};
                 for (let index = 0; index < responses.length; index++) {
                     const response = responses[index];
-                    if (response.status === 200) {
+                    if (response.ok) {
                         const { username } = await response.json();
                         fetchedUsernames[dashboard.invitedUsers[index]] = username;
                     } else {
@@ -122,21 +117,20 @@ const DashboardSelector: React.FC = () => {
         };
 
         try {
-            const response = await axios.post('/dashboards', newDashboard, {
-                headers:{
-                    Authorization: `Bearer ${token}`
-                },
+            const response = await fetch('/dashboards', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify(newDashboard),
             });
 
-
-            if (response.status === 200) {
+            if (response.ok) {
                 await fetchDashboards(token); // Refresh the list of dashboards after creating one
                 setNewDashboardName('');
                 setNewDashboardDescription('');
                 setFeedbackMessage('Dashboard created successfully!');
                 setPopupType(null); // Close the popup
             } else {
-                const errorData = await response.data.json();
+                const errorData = await response.json();
                 setFeedbackMessage(errorData.error || 'Failed to create dashboard. Please try again.');
             }
         } catch (error) {
@@ -167,18 +161,19 @@ const DashboardSelector: React.FC = () => {
         }
 
         try {
-            const response = await axios.get('auth/userbyName/',{
-                params: userId
-            })
-            if (response.status === 200) {
-                const inviteResponse = await axios.post(`/dashboards/${currentDashboard?._id}/invite`, inviteName)
-                // const inviteResponse = await fetch(`/dashboards/${currentDashboard?._id}/invite`, {
-                //     method: 'POST',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify({ name: inviteName }),
-                // });
+            const response = await fetch(`/auth/userbyName/${inviteName}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            });
 
-                if (inviteResponse.status === 200) {
+            if (response.ok) {
+                const inviteResponse = await fetch(`/dashboards/${currentDashboard?._id}/invite`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: inviteName }),
+                });
+
+                if (inviteResponse.ok) {
                     setFeedbackMessage(`Successfully invited ${inviteName} to the dashboard.`);
                     setPopupType(null);
                     setInviteName('');
@@ -199,11 +194,12 @@ const DashboardSelector: React.FC = () => {
             return;
         }
         try {
-            const response = await axios.put(`/dashboards/${currentDashboard?._id}`, {
-                name: modifyName,
-                description: modifyDescription,
+            const response = await fetch(`/dashboards/${currentDashboard?._id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: modifyName, description: modifyDescription }),
             });
-            if (response.status === 200) {
+            if (response.ok) {
                 setFeedbackMessage(`Dashboard ${currentDashboard?._id} updated successfully.`);
                 setPopupType(null);
                 setCurrentDashboard(null);
