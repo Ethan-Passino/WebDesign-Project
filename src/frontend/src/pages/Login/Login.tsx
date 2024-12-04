@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext'; // Import useAuth from AuthContext
 import './Login.css';
+import axios from "axios";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -9,6 +10,7 @@ const Login: React.FC = () => {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth(); // Get the login function from AuthContext
+  const api = axios.create({baseURL: 'http://localhost:5000/'});
 
   const validateUsername = (username: string) => {
     const usernameRegex = /^[^\s]{3,20}$/;
@@ -34,21 +36,18 @@ const Login: React.FC = () => {
     }
 
     try {
-      const response = await fetch('/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
+      const response = await api.post('auth/login',{
+        username,
+        password
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = await response.data.json();
         login(data.token, data.userId); // Call login from AuthContext
         setMessage('Login successful!');
         navigate('/dashboardselector'); // Redirect to the dashboard selection page
       } else {
-        const data = await response.json();
+        const data = await response.data.json();
         setMessage(data.error || 'Failed to login. Please try again.');
       }
     } catch (error) {

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
 import React from 'react';
+import axios from "axios";
 
 function Signup() {
   const [username, setUsername] = useState('');
@@ -9,6 +10,7 @@ function Signup() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const api = axios.create({baseURL: 'http://localhost:5000'});
 
   const validateUsername = (username: string) => {
     const usernameRegex = /^\S{3,20}$/;
@@ -39,19 +41,16 @@ function Signup() {
     }
 
     try {
-      const response = await fetch('/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
+      const response = await api.post(`/auth/signup`,{
+        username,
+        password
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         setMessage('Signup successful!');
         navigate('/login');
       } else {
-        const data = await response.json();
+        const data = await response.data.json();
         setMessage(data.error);
       }
     } catch (error) {
