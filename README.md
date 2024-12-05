@@ -60,8 +60,8 @@
 ---
 
 ## 🚀 Next Steps
-- **Backend Development**: Finalize task creation and other foundational features. 💻  
-- **Frontend Development**: Complete the task dashboard and gamification features. 🎮  
+- **FrontEnd Development**: Add ability to assign tasks to users. Create drag and drop functionality. Use Web Sockets to see changes in real-time. Gamefication!
+- **BackEnd Development**: Add assigned users to Tasks.
 - **Polish the Website**: Enhance the design and usability to make the interface more visually appealing. ✨  
 
 ---
