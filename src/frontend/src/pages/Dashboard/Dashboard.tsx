@@ -2,12 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
+interface Subtask {
+    title: string;
+    completed: boolean;
+}
+
 interface Task {
     _id: string;
     name: string;
     description?: string;
     completed?: boolean;
+    dueBy?: Date; // Optional due date
+    parentPanel?: string; // Reference to the parent panel ID
+    subtasks?: Subtask[]; // Array of subtasks
 }
+
 
 interface Panel {
     _id: string;
@@ -80,34 +89,36 @@ const Dashboard: React.FC = () => {
             }
         };
 
-        const fetchTasks = async (panelId: string, token: string): Promise<Task[] | null> => {
-            try {
-                const response = await fetch(`/tasks/panel/${panelId}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-
-                    if (data.success && Array.isArray(data.data)) {
-                        return data.data;
-                    } else {
-                        console.error('Unexpected task response format:', data);
-                        return null;
-                    }
-                } else {
-                    console.error('Failed to fetch tasks for panel:', panelId, 'Status:', response.status);
-                    return null;
-                }
-            } catch (error) {
-                console.error('Error fetching tasks:', error);
-                return null;
-            }
-        };
-
         fetchPanels();
     }, [dashboardId, navigate]);
 
+
+    const fetchTasks = async (panelId: string, token: string): Promise<Task[] | null> => {
+        try {
+            const response = await fetch(`/tasks/panel/${panelId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                if (data.success && Array.isArray(data.data)) {
+                    return data.data;
+                } else {
+                    console.error('Unexpected task response format:', data);
+                    return null;
+                }
+            } else {
+                console.error('Failed to fetch tasks for panel:', panelId, 'Status:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+            return null;
+        }
+    };
+
+    
     const handleAddPanel = async () => {
         if (!newPanelName) return;
 
@@ -209,6 +220,50 @@ const Dashboard: React.FC = () => {
         setSelectedTask(null);
     };
 
+    // Toggle subtask completion
+    const toggleSubtaskCompletion = (index: number) => {
+        setSelectedTask((prev) =>
+            prev
+                ? {
+                    ...prev,
+                    subtasks: prev.subtasks?.map((subtask, i) =>
+                        i === index ? { ...subtask, completed: !subtask.completed } : subtask
+                    ),
+                }
+                : null
+        );
+    };
+
+    // Add a new subtask
+    const addSubtask = () => {
+        const subtaskTitle = prompt('Enter subtask title:');
+        if (subtaskTitle) {
+            setSelectedTask((prev) =>
+                prev
+                    ? {
+                        ...prev,
+                        subtasks: [
+                            ...(prev.subtasks || []),
+                            { title: subtaskTitle, completed: false },
+                        ],
+                    }
+                    : null
+            );
+        }
+    };
+
+    // Calculate completed subtasks
+    const completedSubtasksCount = selectedTask?.subtasks?.filter((sub) => sub.completed).length || 0;
+
+    // Calculate completion percentage
+    const completionPercentage =
+    selectedTask?.subtasks && selectedTask.subtasks.length > 0
+        ? Math.round((completedSubtasksCount / selectedTask.subtasks.length) * 100)
+        : 0;
+
+
+
+
     const handleSaveTask = async () => {
         try {
             const token = localStorage.getItem("authToken");
@@ -226,31 +281,55 @@ const Dashboard: React.FC = () => {
                 body: JSON.stringify({
                     name: selectedTaskName,
                     description: selectedTaskDescription,
+                    completed: selectedTask?.completed,
+                    dueBy: selectedTask?.dueBy,
+                    parentPanel: selectedTask?.parentPanel,
+                    subtasks: selectedTask?.subtasks || [],
                 }),
             });
     
             if (response.ok) {
-                const updatedTask = await response.json();
-                setPanels((prevPanels) =>
-                    prevPanels.map((panel) =>
-                        panel._id === updatedTask.parentPanel
-                            ? {
-                                  ...panel,
-                                  childTasks: panel.childTasks.map((task) =>
-                                      task._id === updatedTask._id ? updatedTask : task
-                                  ),
-                              }
-                            : panel
-                    )
-                );
-                setShowTaskPopup(false);
+                // Refetch panels and tasks to reflect changes
+                const token = localStorage.getItem('authToken');
+                const userId = localStorage.getItem('userId');
+    
+                if (!token || !userId) {
+                    navigate('/login');
+                    return;
+                }
+    
+                const response = await fetch(`/panels?dashboardId=${dashboardId}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+    
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && Array.isArray(data.data)) {
+                        const fetchedPanels: Panel[] = await Promise.all(
+                            data.data.map(async (panel: Panel) => {
+                                const tasks = await fetchTasks(panel._id, token);
+                                return {
+                                    ...panel,
+                                    childTasks: tasks || [],
+                                };
+                            })
+                        );
+                        setPanels(fetchedPanels);
+                    } else {
+                        console.error('Unexpected panel response format:', data);
+                        setErrorMessage('Unexpected response from the server.');
+                    }
+                }
             } else {
                 console.error("Failed to save task");
             }
         } catch (error) {
             console.error("Error saving task:", error);
+        } finally {
+            setShowTaskPopup(false); // Close the popup after saving
         }
     };
+    
     
 
     if (loading) {
@@ -298,28 +377,152 @@ const Dashboard: React.FC = () => {
             {selectedTask && showTaskPopup && (
     <div className="task-popup">
         <div className="task-popup-content">
-            <h2>Edit Task</h2>
+            {/* Task Name */}
             <input
                 type="text"
                 value={selectedTaskName}
                 onChange={(e) => setSelectedTaskName(e.target.value)}
                 placeholder="Task Name"
+                style={{
+                    backgroundColor: '#f9f9f9',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '1.5em',
+                    padding: '10px',
+                    textAlign: 'center',
+                }}
             />
+
+            {/* Task Description */}
             <textarea
                 value={selectedTaskDescription}
                 onChange={(e) => setSelectedTaskDescription(e.target.value)}
                 placeholder="Task Description"
+                style={{
+                    height: '150px',
+                    padding: '10px',
+                }}
             ></textarea>
-            <div className="task-status">
-                {selectedTask.completed ? "Completed" : "Not Completed"}
+
+            {/* Due Date */}
+            <label style={{ display: 'block', marginBottom: '8px' }}>Due Date:</label>
+            <input
+                type="date"
+                value={selectedTask?.dueBy ? new Date(selectedTask.dueBy).toISOString().substring(0, 10) : ''}
+                onChange={(e) =>
+                    setSelectedTask((prev) =>
+                        prev ? { ...prev, dueBy: new Date(e.target.value) } : null
+                    )
+                }
+                style={{
+                    padding: '10px',
+                    borderRadius: '4px',
+                    width: '100%',
+                }}
+            />
+
+            {/* Parent Panel */}
+            <label style={{ display: 'block', marginBottom: '8px' }}>Parent Panel:</label>
+            <select
+                value={selectedTask?.parentPanel}
+                onChange={(e) =>
+                    setSelectedTask((prev) =>
+                        prev ? { ...prev, parentPanel: e.target.value } : null
+                    )
+                }
+                style={{
+                    padding: '10px',
+                    borderRadius: '4px',
+                    width: '100%',
+                }}
+            >
+                {panels.map((panel) => (
+                    <option key={panel._id} value={panel._id}>
+                        {panel.name}
+                    </option>
+                ))}
+            </select>
+
+            {/* Subtasks Section */}
+            <div className="subtasks-section">
+                <h3>Subtasks</h3>
+                <div className="subtasks-progress">
+                    {completedSubtasksCount}/{selectedTask.subtasks?.length || 0} subtasks completed (
+                    {completionPercentage}% complete)
+                </div>
+                <div className="subtasks-list">
+                    {selectedTask.subtasks?.map((subtask, index) => (
+                        <div
+                            key={index}
+                            className={`subtask-item ${
+                                subtask.completed ? 'completed' : ''
+                            }`}
+                            onClick={() => toggleSubtaskCompletion(index)}
+                        >
+                            {subtask.title}
+                        </div>
+                    ))}
+                </div>
+                <button onClick={addSubtask} className="add-subtask-button">
+                    Add Subtask
+                </button>
             </div>
+
+            {/* Completed Status */}
+            <button
+                className={`status-button ${
+                    selectedTask.completed ? 'completed' : 'not-completed'
+                }`}
+                onClick={async () => {
+                    try {
+                        const token = localStorage.getItem('authToken');
+                        if (!token) {
+                            navigate('/login');
+                            return;
+                        }
+
+                        const response = await fetch(`/tasks/${selectedTask._id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${token}`,
+                            },
+                            body: JSON.stringify({
+                                completed: !selectedTask.completed,
+                            }),
+                        });
+
+                        if (response.ok) {
+                            const updatedTask = await response.json();
+                            setSelectedTask(updatedTask);
+
+                            setPanels((prevPanels) =>
+                                prevPanels.map((panel) =>
+                                    panel._id === updatedTask.parentPanel
+                                        ? {
+                                              ...panel,
+                                              childTasks: panel.childTasks.map((task) =>
+                                                  task._id === updatedTask._id ? updatedTask : task
+                                              ),
+                                          }
+                                        : panel
+                                )
+                            );
+                        }
+                    } catch (error) {
+                        console.error('Error toggling task status:', error);
+                    }
+                }}
+            >
+                {selectedTask.completed ? 'Completed' : 'Not Completed'}
+            </button>
+
+            {/* Save and Cancel Buttons */}
             <button onClick={handleSaveTask}>Save</button>
             <button onClick={() => setShowTaskPopup(false)}>Cancel</button>
         </div>
     </div>
 )}
-
-
             {showAddTaskPopup && (
                <div className="add-task-popup">
                <div className="add-task-popup-content">

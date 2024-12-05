@@ -13,6 +13,10 @@
     min-width: 1000px;
 }
 
+body {
+    display: block;
+}
+
 /* Panel card */
 .panel {
     flex: 0 0 300px; /* Fixed width for each panel */
@@ -35,6 +39,7 @@
     align-items: center;
     width: 100%; /* Full-width container */
     min-height: 100vh; /* Ensure the entire height is utilized */
+    padding-top: 80px;
 }
 
 /* Tasks list inside a panel */
@@ -66,7 +71,22 @@
 }
 
 /* Add panel and task buttons */
-.add-panel-button,
+.add-panel-button
+{
+background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1em; 
+  margin-top: 10px;
+  padding: 8px 15px;
+  transition: background-color .3s ease,transform .2s ease;
+  display: inline;
+  padding: 15px 100px;
+  width: auto;
+  height: auto;
+}
 .add-task-button {
     background-color: #007bff;
     color: white;
@@ -102,8 +122,12 @@
     z-index: 1000;
 }
 
+.table-popup-content label {
+    margin: 0px 0px;
+}
+
 .task-popup-content {
-    width: 400px;
+    width: 500px;
     padding: 20px;
     border-radius: 8px;
     background-color: #f9f9f9;
@@ -111,43 +135,68 @@
     text-align: center;
     font-family: Arial, sans-serif;
     color: #333;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;  /* Updated */
 }
 
-.task-popup-content h2 {
-    margin-bottom: 15px;
-    font-size: 1.5em;
-    color: #007bff; /* Accent color matching the theme */
+.task-popup-content input[type="text"] {
+    width: 100%;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    text-align: center;
+    color: #333;
+    font-weight: bold;
 }
 
-.task-popup-content input[type="text"],
 .task-popup-content textarea {
     width: 100%;
-    margin: 10px 0;
-    padding: 10px;
+    height: 200px; /* Increased height */
+    padding: 15px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1em;
-    color: #333;
+    font-family: Arial, sans-serif;
+    resize: none; /* Disable resizing */
     background-color: #ffffff;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    resize: none;
+    color: #333; /* Dark text for readability */
+    margin: 0px 0px;
 }
 
-.task-popup-content input[type="text"]:focus,
 .task-popup-content textarea:focus {
     outline: none;
     border-color: #007bff;
     background-color: #ffffff;
 }
 
-.task-popup-content .task-status {
-    margin: 10px 0;
-    padding: 10px;
+.task-popup-content .status-button {
+    padding: 10px 20px;
+    border: none;
     border-radius: 4px;
-    background-color: #007bff;
-    color: #fff;
     font-size: 1em;
-    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.task-popup-content .status-button.not-completed {
+    background-color: #dc3545; /* Red for not completed */
+    color: white;
+}
+
+.task-popup-content .status-button.completed {
+    background-color: #28a745; /* Green for completed */
+    color: white;
+}
+
+.task-popup-content .status-button:hover {
+    transform: scale(1.05);
+}
+
+.task-popup-content .status-button:active {
+    transform: scale(1);
 }
 
 .task-popup-content button {
@@ -156,9 +205,8 @@
     border: none;
     border-radius: 4px;
     padding: 10px 20px;
-    margin: 10px 5px;
-    cursor: pointer;
     font-size: 1em;
+    cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
@@ -167,9 +215,81 @@
     transform: scale(1.05);
 }
 
+
 .task-popup-content button:active {
     transform: scale(1);
 }
+
+/* Due date and dropdown input fields */
+.task-popup-content select,
+.task-popup-content input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+    color: #333;
+    background-color: #ffffff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 0px 0px;
+
+}
+
+.task-popup-content select:focus,
+.task-popup-content input[type="date"]:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #ffffff;
+}
+
+.subtasks-section {
+    text-align: left;
+}
+
+.subtasks-list {
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.subtask-item {
+    padding: 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.subtask-item.completed {
+    background-color: #28a745;
+    color: white;
+    text-decoration: line-through;
+}
+
+.add-subtask-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-subtask-button:hover {
+    background-color: #0056b3;
+}
+
+.subtasks-progress {
+    margin-top: 10px;
+    font-size: 1em;
+    color: #333;
+}
+
 
 
 .add-task-popup {
@@ -206,7 +326,7 @@
 .add-task-popup-content textarea {
     width: 100%; /* Full width */
     height: 150px; /* Increased height */
-    margin: 10px 0;
+    margin: 8px 0;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
