@@ -51,6 +51,10 @@ const Dashboard: React.FC = () => {
     const [showDeleteTaskPopup, setShowDeleteTaskPopup] = useState(false);
     const [targetSubtaskIndex, setTargetSubtaskIndex] = useState<number | null>(null);
 
+    const [showDeletePanelPopup, setShowDeletePanelPopup] = useState(false);
+    const [targetPanelId, setTargetPanelId] = useState<string | null>(null);
+
+
 
     useEffect(() => {
         const fetchPanels = async () => {
@@ -399,6 +403,36 @@ const Dashboard: React.FC = () => {
         setTargetSubtaskIndex(index);
         setShowDeleteTaskPopup(true);
     };
+
+    const handleDeletePanel = async () => {
+        if (!targetPanelId) return;
+    
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+    
+            const response = await fetch(`/panels/${targetPanelId}`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+    
+            if (response.ok) {
+                setPanels((prevPanels) =>
+                    prevPanels.filter((panel) => panel._id !== targetPanelId)
+                );
+            } else {
+                console.error('Failed to delete panel');
+            }
+        } catch (error) {
+            console.error('Error deleting panel:', error);
+        } finally {
+            setShowDeletePanelPopup(false);
+            setTargetPanelId(null);
+        }
+    };
+    
     
 
     if (loading) {
@@ -418,10 +452,21 @@ const Dashboard: React.FC = () => {
             <div className="panels">
                 {panels.map((panel) => (
                     <div key={panel._id} className="panel">
-                        <h2>{panel.name}</h2>
-                        <ul>
-                            {panel.childTasks.map((task) => (
-                                <li
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                        <h2 className="panelHeader">{panel.name}</h2>
+                        <button
+                            className="delete-panel-button"
+                            onClick={() => {
+                                setTargetPanelId(panel._id);
+                                setShowDeletePanelPopup(true);
+                            }}
+                        >
+                            &times;
+                        </button>
+                    </div>
+                    <ul>
+                        {panel.childTasks.map((task) => (
+                            <li
                                 key={task._id}
                                 onClick={() => {
                                     setSelectedTask(task);
@@ -432,15 +477,16 @@ const Dashboard: React.FC = () => {
                             >
                                 {task.name}
                             </li>
-                            ))}
-                        </ul>
-                        <button
-                            className="add-task-button"
-                            onClick={() => handleAddTaskClick(panel._id)}
-                        >
-                            Add Task
-                        </button>
+                        ))}
+                    </ul>
+                    <button
+                        className="add-task-button"
+                        onClick={() => handleAddTaskClick(panel._id)}
+                    >
+                        Add Task
+                    </button>
                     </div>
+
                 ))}
             </div>
             {selectedTask && showTaskPopup && (
@@ -726,8 +772,36 @@ const Dashboard: React.FC = () => {
                     </div>
                 </div>
             )}
+
+{showDeletePanelPopup && (
+    <div
+        className="task-popup-overlay"
+        onClick={(e) => {
+            if (e.target === e.currentTarget) setShowDeletePanelPopup(false);
+        }}
+    >
+        <div className="subtask-popup-content">
+            <h2>Delete Panel</h2>
+            <label>Are you sure you want to delete this panel? This action cannot be undone.</label>
+            <div className="subtask-popup-buttons">
+                <button className="subtask-popup-button confirm" onClick={handleDeletePanel}>
+                    Yes, Delete
+                </button>
+                <button
+                    className="subtask-popup-button cancel"
+                    onClick={() => setShowDeletePanelPopup(false)}
+                >
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+)}
+
         </div>
     );
+
+    
 };
 
 export default Dashboard;

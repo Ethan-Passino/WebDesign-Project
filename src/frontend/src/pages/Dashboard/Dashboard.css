@@ -546,3 +546,27 @@ background-color: #007bff;
 .delete-subtask-button:hover {
     transform: scale(1.05);
 }
+.delete-panel-button {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    margin-right: 10px;
+    width: 10%;
+}
+
+.delete-panel-button:hover {
+    background: transparent;
+    background-color: transparent;
+    color: #333;
+    font-weight: bold;
+
+}
+
+.panelHeader {
+    margin: auto auto auto auto;
+
+}
