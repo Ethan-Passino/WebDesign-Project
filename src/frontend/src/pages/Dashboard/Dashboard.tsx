@@ -781,10 +781,10 @@ const Dashboard: React.FC = () => {
             <h2>
                 {targetSubtaskIndex !== null ? 'Delete Subtask' : 'Delete Task'}
             </h2>
-            <p>
+            <label>
                 Are you sure you want to delete this{' '}
                 {targetSubtaskIndex !== null ? 'subtask' : 'task'}? This action cannot be undone.
-            </p>
+            </label>
             <div className="subtask-popup-buttons">
                 <button className="subtask-popup-button confirm" onClick={handleDeleteTask}>
                     Yes, Delete
