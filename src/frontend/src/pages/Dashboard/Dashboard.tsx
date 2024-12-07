@@ -45,6 +45,9 @@ const Dashboard: React.FC = () => {
     const [showAddPanelPopup, setShowAddPanelPopup] = useState(false);
     const [newPanelName, setNewPanelName] = useState('');
 
+    const [showSubtaskPopup, setShowSubtaskPopup] = useState(false);
+    const [newSubtaskTitle, setNewSubtaskTitle] = useState('');
+
     useEffect(() => {
         const fetchPanels = async () => {
             const token = localStorage.getItem('authToken');
@@ -92,6 +95,7 @@ const Dashboard: React.FC = () => {
         fetchPanels();
     }, [dashboardId, navigate]);
 
+    
 
     const fetchTasks = async (panelId: string, token: string): Promise<Task[] | null> => {
         try {
@@ -234,24 +238,6 @@ const Dashboard: React.FC = () => {
         );
     };
 
-    // Add a new subtask
-    const addSubtask = () => {
-        const subtaskTitle = prompt('Enter subtask title:');
-        if (subtaskTitle) {
-            setSelectedTask((prev) =>
-                prev
-                    ? {
-                        ...prev,
-                        subtasks: [
-                            ...(prev.subtasks || []),
-                            { title: subtaskTitle, completed: false },
-                        ],
-                    }
-                    : null
-            );
-        }
-    };
-
     // Calculate completed subtasks
     const completedSubtasksCount = selectedTask?.subtasks?.filter((sub) => sub.completed).length || 0;
 
@@ -330,6 +316,30 @@ const Dashboard: React.FC = () => {
         }
     };
     
+    const addSubtask = () => {
+        setShowSubtaskPopup(true);
+        setNewSubtaskTitle('');
+    };
+
+    const handleAddSubtask = () => {
+        if (!newSubtaskTitle.trim()) {
+            alert('Subtask title is required.');
+            return;
+        }
+    
+        setSelectedTask((prev) =>
+            prev
+                ? {
+                    ...prev,
+                    subtasks: [
+                        ...(prev.subtasks || []),
+                        { title: newSubtaskTitle.trim(), completed: false },
+                    ],
+                }
+                : null
+        );
+        setShowSubtaskPopup(false);
+    };
     
 
     if (loading) {
@@ -375,8 +385,22 @@ const Dashboard: React.FC = () => {
                 ))}
             </div>
             {selectedTask && showTaskPopup && (
-    <div className="task-popup">
+    <div
+        className="task-popup-overlay"
+        onClick={(e) => {
+            // Close the popup if the click is outside the content area
+            if (e.target === e.currentTarget) handleSaveTask();
+        }}
+    >
         <div className="task-popup-content">
+            {/* Close Button */}
+            <button
+                className="close-popup-button"
+                onClick={handleSaveTask}
+            >
+                &times;
+            </button>
+
             {/* Task Name */}
             <input
                 type="text"
@@ -516,13 +540,41 @@ const Dashboard: React.FC = () => {
             >
                 {selectedTask.completed ? 'Completed' : 'Not Completed'}
             </button>
-
-            {/* Save and Cancel Buttons */}
-            <button onClick={handleSaveTask}>Save</button>
-            <button onClick={() => setShowTaskPopup(false)}>Cancel</button>
         </div>
     </div>
 )}
+
+            {showSubtaskPopup && (
+                <div
+                    className="subtask-popup-overlay"
+                    onClick={(e) => {
+                        // Close the popup if the click is outside the content area
+                        if (e.target === e.currentTarget) setShowSubtaskPopup(false);
+                    }}
+                >
+                    <div className="subtask-popup-content">
+                        <h2>Add Subtask</h2>
+                        <input
+                            type="text"
+                            value={newSubtaskTitle}
+                            onChange={(e) => setNewSubtaskTitle(e.target.value)}
+                            placeholder="Subtask Title"
+                        />
+                        <div className="subtask-popup-buttons">
+                            <button className="subtask-popup-button confirm" onClick={handleAddSubtask}>
+                                Add
+                            </button>
+                            <button
+                                className="subtask-popup-button cancel"
+                                onClick={() => setShowSubtaskPopup(false)}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {showAddTaskPopup && (
                <div className="add-task-popup">
                <div className="add-task-popup-content">
