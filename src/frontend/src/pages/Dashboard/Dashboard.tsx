@@ -433,8 +433,6 @@ const Dashboard: React.FC = () => {
         }
     };
     
-    
-
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -584,11 +582,15 @@ const Dashboard: React.FC = () => {
                         <div
                             key={index}
                             className={`subtask-item ${subtask.completed ? 'completed' : ''}`}
+                            onClick={() => toggleSubtaskCompletion(index)}
                         >
-                            <span onClick={() => toggleSubtaskCompletion(index)}>{subtask.title}</span>
+                            <span>{subtask.title}</span>
                             <button
                                 className="delete-subtask-button"
-                                onClick={() => handleDeleteSubtask(index)}
+                                onClick={(e) => {
+                                    e.stopPropagation(); // Prevent parent onClick from triggering
+                                    handleDeleteSubtask(index)
+                                }}
                                 style={{ backgroundColor: '#dc3545', color: '#fff' }}
                             >
                                 X
