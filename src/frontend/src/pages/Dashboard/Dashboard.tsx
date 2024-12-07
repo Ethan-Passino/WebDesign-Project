@@ -54,6 +54,9 @@ const Dashboard: React.FC = () => {
     const [showDeletePanelPopup, setShowDeletePanelPopup] = useState(false);
     const [targetPanelId, setTargetPanelId] = useState<string | null>(null);
 
+    const [draggedTask, setDraggedTask] = useState<Task | null>(null);
+    const [hoveredPanelId, setHoveredPanelId] = useState<string | null>(null);
+
 
 
     useEffect(() => {
@@ -103,7 +106,57 @@ const Dashboard: React.FC = () => {
         fetchPanels();
     }, [dashboardId, navigate]);
 
-    
+    const handleDragStart = (task: Task) => {
+        setDraggedTask(task);
+    };
+
+    const handleDragOver = (event: React.DragEvent) => {
+        event.preventDefault(); // Allow dropping by preventing default behavior
+    };
+
+    const handleDrop = async (panelId: string) => {
+        if (!draggedTask) return;
+
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+
+            // Update the task's parentPanel in the backend
+            const response = await fetch(`/tasks/${draggedTask._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ parentPanel: panelId }),
+            });
+
+            if (response.ok) {
+                setPanels((prevPanels) =>
+                    prevPanels.map((panel) => {
+                        if (panel._id === draggedTask.parentPanel) {
+                            // Remove the task from the old panel
+                            return {
+                                ...panel,
+                                childTasks: panel.childTasks.filter((task) => task._id !== draggedTask._id),
+                            };
+                        }
+                        if (panel._id === panelId) {
+                            // Add the task to the new panel
+                            return {
+                                ...panel,
+                                childTasks: [...panel.childTasks, { ...draggedTask, parentPanel: panelId }],
+                            };
+                        }
+                        return panel;
+                    })
+                );
+                setDraggedTask(null); // Clear dragged task
+            }
+        } catch (error) {
+            console.error('Error moving task:', error);
+        }
+    };
 
     const fetchTasks = async (panelId: string, token: string): Promise<Task[] | null> => {
         try {
@@ -449,7 +502,21 @@ const Dashboard: React.FC = () => {
             </button>
             <div className="panels">
                 {panels.map((panel) => (
-                    <div key={panel._id} className="panel">
+                    <div
+                    key={panel._id}
+                    className={`panel ${hoveredPanelId === panel._id ? 'panel-hovered' : ''}`}
+                    onDragOver={(e) => {
+                        e.preventDefault();
+                        setHoveredPanelId(panel._id);
+                    }}
+                    onDragLeave={() => {
+                        setHoveredPanelId(null);
+                    }}
+                    onDrop={(e) => {
+                        setHoveredPanelId(null);
+                        handleDrop(panel._id);
+                    }}
+>
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                         <h2 className="panelHeader">{panel.name}</h2>
                         <button
@@ -466,12 +533,14 @@ const Dashboard: React.FC = () => {
                         {panel.childTasks.map((task) => (
                             <li
                                 key={task._id}
+                                draggable
                                 onClick={() => {
                                     setSelectedTask(task);
                                     setSelectedTaskName(task.name);
                                     setSelectedTaskDescription(task.description || "");
                                     setShowTaskPopup(true);
                                 }}
+                                onDragStart={() => handleDragStart(task)}
                             >
                                 {task.name}
                             </li>
