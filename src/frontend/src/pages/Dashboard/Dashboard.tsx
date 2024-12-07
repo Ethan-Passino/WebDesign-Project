@@ -28,6 +28,7 @@ const Dashboard: React.FC = () => {
     const { dashboardId } = useParams();
     const navigate = useNavigate();
     const [panels, setPanels] = useState<Panel[]>([]);
+
     const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -56,8 +57,6 @@ const Dashboard: React.FC = () => {
 
     const [draggedTask, setDraggedTask] = useState<Task | null>(null);
     const [hoveredPanelId, setHoveredPanelId] = useState<string | null>(null);
-
-
 
     useEffect(() => {
         const fetchPanels = async () => {
@@ -108,10 +107,6 @@ const Dashboard: React.FC = () => {
 
     const handleDragStart = (task: Task) => {
         setDraggedTask(task);
-    };
-
-    const handleDragOver = (event: React.DragEvent) => {
-        event.preventDefault(); // Allow dropping by preventing default behavior
     };
 
     const handleDrop = async (panelId: string) => {
