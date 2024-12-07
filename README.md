@@ -60,7 +60,7 @@
 ---
 
 ## 🚀 Next Steps
-- **FrontEnd Development**: Add ability to assign tasks to users. Create drag and drop functionality. Use Web Sockets to see changes in real-time. Gamefication!
+- **FrontEnd Development**: Add ability to assign tasks to users. Create drag and drop functionality. Gamefication!
 - **BackEnd Development**: Add assigned users to Tasks.
 - **Polish the Website**: Enhance the design and usability to make the interface more visually appealing. ✨  
 
