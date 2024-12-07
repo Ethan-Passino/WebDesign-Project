@@ -110,7 +110,15 @@ const Dashboard: React.FC = () => {
     };
 
     const handleDrop = async (panelId: string) => {
-        if (!draggedTask) return;
+        if (!draggedTask || !draggedTask.parentPanel) {
+            return; // Ensure draggedTask exists and has a parentPanel
+        }
+    
+        // Check if the task is already in the target panel
+        if (draggedTask.parentPanel === targetPanelId) {
+            console.log("Task is already in the target panel, no action taken.");
+            return;
+        }
 
         try {
             const token = localStorage.getItem('authToken');
@@ -503,12 +511,17 @@ const Dashboard: React.FC = () => {
                     onDragOver={(e) => {
                         e.preventDefault();
                         setHoveredPanelId(panel._id);
+                        setTargetPanelId(panel._id)
+
                     }}
                     onDragLeave={() => {
                         setHoveredPanelId(null);
+                        setTargetPanelId(panel._id)
+
                     }}
                     onDrop={(e) => {
                         setHoveredPanelId(null);
+                        setTargetPanelId(panel._id)
                         handleDrop(panel._id);
                     }}
 >
