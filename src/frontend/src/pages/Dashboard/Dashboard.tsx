@@ -116,7 +116,6 @@ const Dashboard: React.FC = () => {
     
         // Check if the task is already in the target panel
         if (draggedTask.parentPanel === targetPanelId) {
-            console.log("Task is already in the target panel, no action taken.");
             return;
         }
 
