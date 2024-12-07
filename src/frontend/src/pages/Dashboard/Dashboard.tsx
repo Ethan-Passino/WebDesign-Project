@@ -48,6 +48,10 @@ const Dashboard: React.FC = () => {
     const [showSubtaskPopup, setShowSubtaskPopup] = useState(false);
     const [newSubtaskTitle, setNewSubtaskTitle] = useState('');
 
+    const [showDeleteTaskPopup, setShowDeleteTaskPopup] = useState(false);
+    const [targetSubtaskIndex, setTargetSubtaskIndex] = useState<number | null>(null);
+
+
     useEffect(() => {
         const fetchPanels = async () => {
             const token = localStorage.getItem('authToken');
@@ -341,6 +345,61 @@ const Dashboard: React.FC = () => {
         setShowSubtaskPopup(false);
     };
     
+    const handleDeleteTask = async () => {
+        if (targetSubtaskIndex !== null && selectedTask) {
+            // Handle subtask deletion
+            setSelectedTask((prev) =>
+                prev
+                    ? {
+                          ...prev,
+                          subtasks: prev.subtasks?.filter((_, i) => i !== targetSubtaskIndex),
+                      }
+                    : null
+            );
+            setTargetSubtaskIndex(null); // Reset target index
+        } else if (selectedTask) {
+            // Handle regular task deletion
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) return;
+    
+                const response = await fetch(`/tasks/${selectedTask._id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+    
+                if (response.ok) {
+                    setPanels((prevPanels) =>
+                        prevPanels.map((panel) =>
+                            panel._id === selectedTask.parentPanel
+                                ? {
+                                      ...panel,
+                                      childTasks: panel.childTasks.filter((task) => task._id !== selectedTask._id),
+                                  }
+                                : panel
+                        )
+                    );
+                    setSelectedTask(null);
+                } else {
+                    console.error('Failed to delete task');
+                }
+            } catch (error) {
+                console.error('Error deleting task:', error);
+            }
+        }
+    
+        setShowDeleteTaskPopup(false); // Close the popup
+    };
+    
+
+    const handleDeleteSubtask = (index: number) => {
+        // Store the index of the subtask to be deleted and show the delete confirmation popup
+        setTargetSubtaskIndex(index);
+        setShowDeleteTaskPopup(true);
+    };
+    
 
     if (loading) {
         return <div>Loading...</div>;
@@ -398,7 +457,7 @@ const Dashboard: React.FC = () => {
                 className="close-popup-button"
                 onClick={handleSaveTask}
             >
-                &times;
+                X
             </button>
 
             {/* Task Name */}
@@ -478,15 +537,20 @@ const Dashboard: React.FC = () => {
                     {selectedTask.subtasks?.map((subtask, index) => (
                         <div
                             key={index}
-                            className={`subtask-item ${
-                                subtask.completed ? 'completed' : ''
-                            }`}
-                            onClick={() => toggleSubtaskCompletion(index)}
+                            className={`subtask-item ${subtask.completed ? 'completed' : ''}`}
                         >
-                            {subtask.title}
+                            <span onClick={() => toggleSubtaskCompletion(index)}>{subtask.title}</span>
+                            <button
+                                className="delete-subtask-button"
+                                onClick={() => handleDeleteSubtask(index)}
+                                style={{ backgroundColor: '#dc3545', color: '#fff' }}
+                            >
+                                X
+                            </button>
                         </div>
                     ))}
                 </div>
+
                 <button onClick={addSubtask} className="add-subtask-button">
                     Add Subtask
                 </button>
@@ -540,6 +604,14 @@ const Dashboard: React.FC = () => {
             >
                 {selectedTask.completed ? 'Completed' : 'Not Completed'}
             </button>
+            <button
+                className="delete-task-button"
+                onClick={() => setShowDeleteTaskPopup(true)}
+                style={{ marginTop: '10px', backgroundColor: '#dc3545', color: '#fff' }}
+            >
+                Delete Task
+            </button>
+
         </div>
     </div>
 )}
@@ -574,6 +646,39 @@ const Dashboard: React.FC = () => {
                     </div>
                 </div>
             )}
+ {showDeleteTaskPopup && (
+    <div
+        className="task-popup-overlay"
+        onClick={(e) => {
+            if (e.target === e.currentTarget) setShowDeleteTaskPopup(false);
+        }}
+    >
+        <div className="subtask-popup-content">
+            <h2>
+                {targetSubtaskIndex !== null ? 'Delete Subtask' : 'Delete Task'}
+            </h2>
+            <p>
+                Are you sure you want to delete this{' '}
+                {targetSubtaskIndex !== null ? 'subtask' : 'task'}? This action cannot be undone.
+            </p>
+            <div className="subtask-popup-buttons">
+                <button className="subtask-popup-button confirm" onClick={handleDeleteTask}>
+                    Yes, Delete
+                </button>
+                <button
+                    className="subtask-popup-button cancel"
+                    onClick={() => {
+                        setShowDeleteTaskPopup(false);
+                        setTargetSubtaskIndex(null); // Reset target index in case of cancel
+                    }}
+                >
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+)}
+
 
             {showAddTaskPopup && (
                <div className="add-task-popup">
