@@ -40,6 +40,7 @@ body {
     width: 100%; /* Full-width container */
     min-height: 100vh; /* Ensure the entire height is utilized */
     padding-top: 80px;
+    width: 100vw; /* Full width of the viewport */
 }
 
 /* Tasks list inside a panel */

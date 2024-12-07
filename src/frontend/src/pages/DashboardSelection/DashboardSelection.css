@@ -5,6 +5,8 @@
     padding: 20px;
     font-family: Arial, sans-serif;
     color: #333;
+    display: grid;
+    place-items: center;
 }
 
 h1 {
@@ -29,6 +31,7 @@ h1 {
     border: 1px solid #ddd; /* Optional border for better visual separation */
     border-radius: 8px; /* Rounded corners for the list container */
     padding: 20px; /* Padding inside the scrollable container */
+    width: 80vw;
 }
 
 
@@ -132,8 +135,8 @@ h1 {
 
 /* Button to reveal the create form */
 .show-create-button {
-    display: block;
-    width: 100%;
+    display: inline-block;
+    width: 30%;
     padding: 10px;
     margin-top: 20px;
     font-size: 1em;
@@ -143,6 +146,7 @@ h1 {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    text-align:center;
 }
 
 .show-create-button:hover {
