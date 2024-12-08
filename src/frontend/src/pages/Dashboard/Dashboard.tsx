@@ -623,29 +623,6 @@ const Dashboard: React.FC = () => {
                     width: '100%',
                 }}
             />
-
-            {/* Parent Panel */}
-            <label style={{ display: 'block', marginBottom: '8px' }}>Parent Panel:</label>
-            <select
-                value={selectedTask?.parentPanel}
-                onChange={(e) =>
-                    setSelectedTask((prev) =>
-                        prev ? { ...prev, parentPanel: e.target.value } : null
-                    )
-                }
-                style={{
-                    padding: '10px',
-                    borderRadius: '4px',
-                    width: '100%',
-                }}
-            >
-                {panels.map((panel) => (
-                    <option key={panel._id} value={panel._id}>
-                        {panel.name}
-                    </option>
-                ))}
-            </select>
-
             {/* Subtasks Section */}
             <div className="subtasks-section">
                 <h3>Subtasks</h3>
@@ -680,54 +657,63 @@ const Dashboard: React.FC = () => {
                 </button>
             </div>
 
-            {/* Completed Status */}
             <button
-                className={`status-button ${
-                    selectedTask.completed ? 'completed' : 'not-completed'
-                }`}
-                onClick={async () => {
-                    try {
-                        const token = localStorage.getItem('authToken');
-                        if (!token) {
-                            navigate('/login');
-                            return;
-                        }
+    className={`status-button ${
+        selectedTask.completed ? 'completed' : 'not-completed'
+    }`}
+    onClick={async () => {
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                navigate('/login');
+                return;
+            }
 
-                        const response = await fetch(`/tasks/${selectedTask._id}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                Authorization: `Bearer ${token}`,
-                            },
-                            body: JSON.stringify({
-                                completed: !selectedTask.completed,
-                            }),
-                        });
+            // Send all task data, including subtasks, to preserve them
+            const response = await fetch(`/tasks/${selectedTask._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    name: selectedTask.name,
+                    description: selectedTask.description,
+                    completed: !selectedTask.completed, // Toggle the completion status
+                    dueBy: selectedTask.dueBy,
+                    parentPanel: selectedTask.parentPanel,
+                    subtasks: selectedTask.subtasks || [], // Include subtasks to preserve them
+                }),
+            });
 
-                        if (response.ok) {
-                            const updatedTask = await response.json();
-                            setSelectedTask(updatedTask);
+            if (response.ok) {
+                const updatedTask = await response.json();
 
-                            setPanels((prevPanels) =>
-                                prevPanels.map((panel) =>
-                                    panel._id === updatedTask.parentPanel
-                                        ? {
-                                              ...panel,
-                                              childTasks: panel.childTasks.map((task) =>
-                                                  task._id === updatedTask._id ? updatedTask : task
-                                              ),
-                                          }
-                                        : panel
-                                )
-                            );
-                        }
-                    } catch (error) {
-                        console.error('Error toggling task status:', error);
-                    }
-                }}
-            >
-                {selectedTask.completed ? 'Completed' : 'Not Completed'}
-            </button>
+                // Update the selected task
+                setSelectedTask(updatedTask);
+
+                // Update the panels
+                setPanels((prevPanels) =>
+                    prevPanels.map((panel) =>
+                        panel._id === updatedTask.parentPanel
+                            ? {
+                                  ...panel,
+                                  childTasks: panel.childTasks.map((task) =>
+                                      task._id === updatedTask._id ? updatedTask : task
+                                  ),
+                              }
+                            : panel
+                    )
+                );
+            }
+        } catch (error) {
+            console.error('Error toggling task status:', error);
+        }
+    }}
+>
+    {selectedTask.completed ? 'Completed' : 'Not Completed'}
+</button>
+
             <button
                 className="delete-task-button"
                 onClick={() => setShowDeleteTaskPopup(true)}
