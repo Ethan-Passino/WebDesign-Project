@@ -13,6 +13,10 @@
     min-width: 1000px;
 }
 
+body {
+    display: block;
+}
+
 /* Panel card */
 .panel {
     flex: 0 0 300px; /* Fixed width for each panel */
@@ -35,6 +39,8 @@
     align-items: center;
     width: 100%; /* Full-width container */
     min-height: 100vh; /* Ensure the entire height is utilized */
+    padding-top: 80px;
+    width: 100vw; /* Full width of the viewport */
 }
 
 /* Tasks list inside a panel */
@@ -66,7 +72,22 @@
 }
 
 /* Add panel and task buttons */
-.add-panel-button,
+.add-panel-button
+{
+background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1em; 
+  margin-top: 10px;
+  padding: 8px 15px;
+  transition: background-color .3s ease,transform .2s ease;
+  display: inline;
+  padding: 15px 100px;
+  width: auto;
+  height: auto;
+}
 .add-task-button {
     background-color: #007bff;
     color: white;
@@ -89,3 +110,469 @@
 .add-task-button:active {
     transform: scale(1); /* Reset to normal scale when clicked */
 }
+.task-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.table-popup-content label {
+    margin: 0px 0px;
+}
+
+.task-popup-content {
+    width: 500px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    font-family: Arial, sans-serif;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;  /* Updated */
+}
+
+.task-popup-content input[type="text"] {
+    width: 100%;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    text-align: center;
+    color: #333;
+    font-weight: bold;
+}
+
+.task-popup-content textarea {
+    width: 100%;
+    height: 200px; /* Increased height */
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+    font-family: Arial, sans-serif;
+    resize: none; /* Disable resizing */
+    background-color: #ffffff;
+    color: #333; /* Dark text for readability */
+    margin: 0px 0px;
+}
+
+.task-popup-content textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #ffffff;
+}
+
+.task-popup-content .status-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.task-popup-content .status-button.not-completed {
+    background-color: #dc3545; /* Red for not completed */
+    color: white;
+}
+
+.task-popup-content .status-button.completed {
+    background-color: #28a745; /* Green for completed */
+    color: white;
+}
+
+.task-popup-content .status-button:hover {
+    transform: scale(1.05);
+}
+
+.task-popup-content .status-button:active {
+    transform: scale(1);
+}
+
+.task-popup-content button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.task-popup-content button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+
+.task-popup-content button:active {
+    transform: scale(1);
+}
+
+/* Due date and dropdown input fields */
+.task-popup-content select,
+.task-popup-content input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+    color: #333;
+    background-color: #ffffff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 0px 0px;
+
+}
+
+.task-popup-content select:focus,
+.task-popup-content input[type="date"]:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #ffffff;
+}
+
+.subtasks-section {
+    text-align: left;
+}
+
+.subtasks-list {
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.subtask-item {
+    padding: 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex; /* Use flexbox for alignment */
+}
+
+.subtask-item.completed {
+    background-color: #28a745;
+    color: white;
+    text-decoration: line-through;
+}
+
+.add-subtask-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-subtask-button:hover {
+    background-color: #0056b3;
+}
+
+.subtasks-progress {
+    margin-top: 10px;
+    font-size: 1em;
+    color: #555;
+}
+
+
+
+.add-task-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.add-task-popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.add-task-popup-content input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.add-task-popup-content textarea {
+    width: 100%; /* Full width */
+    height: 150px; /* Increased height */
+    margin: 8px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1em;
+    font-family: Arial, sans-serif;
+    resize: none; /* Disable resizing */
+    background-color: #f9f9f9; /* Light background matching the theme */
+    color: #333; /* Dark text for readability */
+}
+.add-task-popup-content button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.add-task-popup-content button:hover {
+    background-color: #0056b3;
+}
+
+/* Panel popup styling */
+.panel-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.panel-popup-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.panel-popup-content input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.panel-popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.add-panel-popup-button,
+.cancel-panel-popup-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-panel-popup-button {
+    background-color: #007bff;
+    color: white;
+}
+
+.add-panel-popup-button:hover {
+    background-color: #0056b3;
+}
+
+.cancel-panel-popup-button {
+    background-color: #ccc;
+    color: black;
+}
+
+.cancel-panel-popup-button:hover {
+    background-color: #999;
+}
+
+/* Popup overlay */
+.task-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* Close button */
+.close-popup-button {
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333;
+    width: 10%;
+    margin-left: auto;
+}
+.subtask-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.subtask-popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.subtask-popup-content input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+    font-family: Arial, sans-serif;
+}
+
+.subtask-popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.subtask-popup-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.subtask-popup-button.confirm {
+    background-color: #007bff;
+    color: white;
+}
+
+.subtask-popup-button.confirm:hover {
+    background-color: #0056b3;
+}
+
+.subtask-popup-button.cancel {
+    background-color: #ccc;
+    color: black;
+}
+
+.subtask-popup-button.cancel:hover {
+    background-color: #999;
+}
+
+.delete-task-button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background-color: #dc3545; /* Red for delete */
+    color: #fff;
+}
+
+.delete-task-button:hover {
+    background-color: #b22222; /* Darker red on hover */
+}
+
+
+.delete-subtask-button {
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color .3s ease,transform .2s ease;
+    margin-left: auto;
+    background: #0000;
+    width: 10%;
+    padding: 10px;
+    font-family: inherit;
+    font-weight: 500;
+    box-sizing: inherit;
+    text-align: center;
+}
+
+.delete-subtask-button:hover {
+    transform: scale(1.05);
+}
+.delete-panel-button {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    margin-right: 10px;
+    width: 10%;
+}
+
+.delete-panel-button:hover {
+    background: transparent;
+    background-color: transparent;
+    color: #333;
+    font-weight: bold;
+
+}
+
+.panelHeader {
+    margin: auto auto auto auto;
+
+}
+.panel.panel-hovered {
+    border: 2px solid #28a745; /* Green border */
+    transition: border 0.2s ease;
+}
+

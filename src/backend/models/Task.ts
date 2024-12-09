@@ -1,35 +1,38 @@
-import mongoose, {Document, Schema} from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
+interface Subtask {
+    title: string;
+    completed: boolean;
+}
 
-//add to this as necessary
-//add a decoupled id value probably using nanoid
-
-export interface ITask extends Document{
+export interface ITask extends Document {
     name: string;
     creatorId: string;
     parentPanel: Schema.Types.ObjectId;
     completed: boolean;
     dueBy: Date;
 
-
     description?: string;
-    subtasks?: [this];
+    subtasks?: Subtask[]; // Array of subtasks
 }
 
 
+
 const taskSchema = new Schema<ITask>({
-    name: {type: String, required: true},
-    creatorId: {type: String, required: true},
-    completed: {type: Boolean, default: false},
-    parentPanel: {type: Schema.Types.ObjectId, ref: 'Panel'},
-    dueBy: {type: Date},
-    description: {type: String},
-    subtasks: [{type: Schema.Types.ObjectId, ref: 'Task'}],
-    },
-    // built-in mongoose function that adds and handles
-    // created/updatedAt values for the document
-    {timestamps: true}
-);
+    name: { type: String, required: true },
+    creatorId: { type: String, required: true },
+    completed: { type: Boolean, default: false },
+    parentPanel: { type: Schema.Types.ObjectId, ref: 'Panel' },
+    dueBy: { type: Date },
+    description: { type: String },
+    subtasks: [
+        {
+            title: { type: String, required: true },
+            completed: { type: Boolean, default: false },
+        },
+    ],
+}, { timestamps: true });
+
 
 // this is if we want to use an ID value for client-facing purposes but use
 // mongodb's _id internally

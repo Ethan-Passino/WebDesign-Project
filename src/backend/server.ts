@@ -28,6 +28,8 @@ app.use('/points', pointsRoutes);
 app.use('/panels', panelRoutes);
 app.use('/tasks', taskRoutes);
 
+//app.use(express.static(path.join(__dirname, 'build')));
+
 app.use(express.static(path.join(__dirname, '../../src/frontend/build')));
 
 app.get('*', (req: Request, res: Response) => {

@@ -64,7 +64,7 @@ export const getTasksInPanel = async (req: Request, res: Response) => {
  */
 export const createTask = async (req: Request, res: Response) => {
     try {
-        const { panelId, newName, creatorId } = req.body;
+        const { panelId, newName, creatorId, description } = req.body;
 
         if (!panelId || !creatorId || !newName) {
             return res.status(400).json({ error: 'Malformed createTask request' });
@@ -74,6 +74,7 @@ export const createTask = async (req: Request, res: Response) => {
             name: newName,
             parentPanel: panelId,
             creatorId: creatorId,
+            description: description,
         });
 
         const savedTask = await newTask.save();

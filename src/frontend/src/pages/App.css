@@ -1,6 +1,7 @@
 /* General page styling */
 body, html {
   margin: 0;
+  padding-top: 80px; /* Matches the height of the .top-bar */
   padding: 0;
   box-sizing: border-box;
   font-family: 'Arial', sans-serif;

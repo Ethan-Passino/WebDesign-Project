@@ -5,12 +5,12 @@ on:
     branches:
       - update2
       - main
-      - update3
+      - update-3
   pull_request:
     branches:
       - update2
       - main
-      - update3
+      - update-3
 
 jobs:
   backend:
